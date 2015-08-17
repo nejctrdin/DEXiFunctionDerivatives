@@ -1,0 +1,48 @@
+<!doctype html>
+<title>DEXi function to derivatives</title>
+<div>
+  <h1>DEXi function to derivatives</h1>
+  <h2>Input</h2>
+  {{ entries.raw_function }}
+  {% if entries.ok %}
+    <h2>Tabelaric function</h2>
+    <table border="1">
+        <tr>
+            {% for name in entries.arguments %}
+                <td>{{ name }}</td>
+            {% endfor %}
+            <td>Output</td>
+        </tr>
+    {% for point in entries.function %}
+        <tr>
+            {% for p in point[0] %}
+                <td>{{ p }}</td>
+            {% endfor %}
+            <td>{{ point[1] }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <h2>Derivatives</h2>
+    <table border="1">
+        <tr>
+            <td>Name</td>
+            {% for point in entries.function %}
+                <td>{{ point[0] }}</td>
+            {% endfor %}
+        </tr>
+        {% for name in entries.arguments %}
+            <tr>
+                <td>{{ name }}</td>
+                {% for point in entries.function %}
+                    <td>{{ entries.derivatives[loop.index0] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+  {% else %}
+    <b>Could not parse function!</b>
+    <br>
+    <b>{{ entries.message }}</b>
+  {% endif %}
+</div>

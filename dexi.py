@@ -1,0 +1,86 @@
+from itertools import product
+from subprocess import check_output
+
+NOT_CORRECT_LINES = "Function should be represented in 3 lines!"
+NOT_NUMBER_MULTIPLICITIES_ARG = ("Number of function arguments ({0}) and number "
+                                 "of multiplicities ({1}) should be equal!")
+MULTIPLICITIES_INT = "Multiplicities should be integers! Muliplicity {0} is not!"
+INPUT_OUTPUT_NOT_MATCHING = ("The input space size ({0}) does not match output "
+                             "space size ({1})!")
+FUNCTION_OUTPUT_INT = "All function outputs should be integers!"
+
+def parse_function(f_rep):
+    split = f_rep.split("\r\n")
+    
+    if len(split) != 3:
+        return None, None, False, NOT_CORRECT_LINES
+   
+    function_outputs = split[0]
+
+    for output in function_outputs:
+        try:
+            int(output)
+        except:
+            return None, None, False, FUNCTION_OUTPUT_INT
+            
+    output_size = len(function_outputs)
+    arguments = split[1].replace(" ","").split(",")
+    multip = split[2].replace(" ","").split(",")
+
+    if len(arguments) != len(multip):
+        return None, None, False, NOT_NUMBER_MULTIPLICITIES_ARG.format(len(arguments), len(multip))
+    
+    i = 1
+    for mutiplicity in multip:
+        try:
+            int(mutiplicity)
+        except:
+            return None, None, False, MULTIPLICITIES_INT.format(i)
+        i+=1
+
+    input_sizes = map(int, multip)
+    input_size = reduce(lambda x,y: x*y, input_sizes)
+    
+    if input_size != output_size:
+        return None, None, False, INPUT_OUTPUT_NOT_MATCHING.format(input_size, output_size)
+
+    input_space = [xrange(size) for size in input_sizes]
+
+    function = []
+    i = 0
+    for point in product(*input_space):
+        tmp = [point, int(function_outputs[i])]
+        function.append(tmp)
+        i += 1
+
+    return function, arguments, True, ""
+
+def _construct_mathematica_nb_derivatives(function):
+    input_size = len(function[0][0])
+
+    contents = []
+    problem_rep = "f=Interpolation[{{{0}}}]"
+    points = []
+    for point in function:
+        inputs = ",".join(map(str, point[0]))
+        output = str(point[1])
+        points.append("{{{{{0}}},{1}}}".format(inputs, output))
+    joined = ",".join(points)
+    problem = problem_rep.format(joined)
+    contents.append(problem)
+
+    arguments = [chr(ord("a") + i) for i in xrange(input_size)]
+    formatted_args = ",".join(arguments)
+    contents.append("eval=Function[{{{0}}},f[{0}]]".format(formatted_args))
+
+    for arg in arguments:
+        derivative = "d{1}=Function[{{{0}}},Evaluate[D[eval[{0}],{1}]]]".format(formatted_args, arg)
+        contents.append(derivative)
+
+    print "\n".join(contents)
+    
+def get_derivatives(function):
+    derivatives = [0]*(len(function) * len(function[0][0]))
+    _construct_mathematica_nb_derivatives(function)
+    a = check_output("math -script < tmp.m", shell=True)   
+    return derivatives
