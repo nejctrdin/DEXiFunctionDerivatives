@@ -1,50 +1,75 @@
-<!doctype html>
-<title>DEXi function to derivatives</title>
-<div>
-  <h1>DEXi function to derivatives</h1>
-  <h2>Input</h2>
-  {{ entries.raw_function }}
-  {% if entries.ok %}
-    <h2>Tabelaric function</h2>
-    <table border="1">
-        <tr>
-            {% for name in entries.arguments %}
-                <th>{{ name }}</th>
-            {% endfor %}
-            <th>Output</th>
-        </tr>
-    {% for point in entries.function %}
-        <tr>
-            {% for p in point[0] %}
-                <td>{{ p }}</td>
-            {% endfor %}
-            <td>{{ point[1] }}</td>
-        </tr>
-    {% endfor %}
-    </table>
-
-    <h2>Derivatives</h2>
-    <table border="1">
-        <tr>
-            <th>Name</th>
-            {% for point in entries.function %}
-                <th>{{ point[0] }}</th>
-            {% endfor %}
-            <th>Average</th>
-        </tr>
-        {% for name in entries.arguments %}
-            <tr>
-                {% set tmp_counter = loop.index0 %}
-                <td>{{ name }}</td>
-                {% for _ in entries.function + [1] %}
-                    <td>{{ entries.derivatives[loop.index0 + loop.length*tmp_counter] }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
-  {% else %}
-    <b>Could not parse function!</b>
-    <br>
-    <b>{{ entries.message }}</b>
-  {% endif %}
-</div>
+{% extends "layout.html" %}
+{% block specific %}
+            <div class="page-header">
+                <h1>Input</h1>
+            </div>
+            <div class="well">
+                <p>
+                    {% for line in entries.raw_function %}
+                        {{ line }}<br>
+                    {% endfor %}
+                </p>
+            </div>
+            {% if entries.ok %}
+                <div class="page-header">
+                    <h1>Tabelaric function</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    {% for name in entries.arguments %}
+                                        <th>{{ name }}</th>
+                                    {% endfor %}
+                                    <th>Output</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for point in entries.function %}
+                                    <tr>
+                                        {% for p in point[0] %}
+                                            <td>{{ p }}</td>
+                                        {% endfor %}
+                                        <td>{{ point[1] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="page-header">
+                    <h1>Derivatives</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    {% for point in entries.function %}
+                                        <th>{{ point[0] }}</th>
+                                    {% endfor %}
+                                    <th>Average</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for name in entries.arguments %}
+                                    <tr>
+                                        {% set tmp_counter = loop.index0 %}
+                                        <td>{{ name }}</td>
+                                        {% for _ in entries.function + [1] %}
+                                            <td>{{ entries.derivatives[loop.index0 + loop.length*tmp_counter] }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                Could not parse function! {{ entries.message }}</b>
+            </div>
+            {% endif %}
+{% endblock %}
