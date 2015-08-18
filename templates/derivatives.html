@@ -9,9 +9,9 @@
     <table border="1">
         <tr>
             {% for name in entries.arguments %}
-                <td>{{ name }}</td>
+                <th>{{ name }}</th>
             {% endfor %}
-            <td>Output</td>
+            <th>Output</th>
         </tr>
     {% for point in entries.function %}
         <tr>
@@ -26,16 +26,18 @@
     <h2>Derivatives</h2>
     <table border="1">
         <tr>
-            <td>Name</td>
+            <th>Name</th>
             {% for point in entries.function %}
-                <td>{{ point[0] }}</td>
+                <th>{{ point[0] }}</th>
             {% endfor %}
+            <th>Average</th>
         </tr>
         {% for name in entries.arguments %}
             <tr>
+                {% set tmp_counter = loop.index0 %}
                 <td>{{ name }}</td>
-                {% for point in entries.function %}
-                    <td>{{ entries.derivatives[loop.index0] }}</td>
+                {% for _ in entries.function + [1] %}
+                    <td>{{ entries.derivatives[loop.index0 + loop.length*tmp_counter] }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}

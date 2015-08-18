@@ -3,6 +3,7 @@ from subprocess import check_output
 import random
 import string
 import os.path
+import os
 
 NOT_CORRECT_LINES = "Function should be represented in 3 lines!"
 NOT_NUMBER_MULTIPLICITIES_ARG = ("Number of function arguments ({0}) and number "
@@ -11,6 +12,7 @@ MULTIPLICITIES_INT = "Multiplicities should be integers! Muliplicity {0} is not!
 INPUT_OUTPUT_NOT_MATCHING = ("The input space size ({0}) does not match output "
                              "space size ({1})!")
 FUNCTION_OUTPUT_INT = "All function outputs should be integers!"
+PROBLEM_DERIVATIVES = "There was a problem constructing derivatives!"
 
 def parse_function(f_rep):
     split = f_rep.split("\r\n")
@@ -60,6 +62,7 @@ def parse_function(f_rep):
 
 def _mathematica_derivatives(function):
     input_size = len(function[0][0])
+    defined_points_size = len(function)
 
     contents = []
     out_index = 1
@@ -103,9 +106,34 @@ def _mathematica_derivatives(function):
         _file.write(line)
         _file.write("\n")
     _file.close()
-    
-def get_derivatives(function):
-    _mathematica_derivatives(function)
-    #a = check_output("math -script < tmp.m", shell=True)   
-    derivatives = [0]*(len(function) * len(function[0][0]))
+    out = check_output("math -script < {0}".format(file_name), shell=True)   
+    os.remove(file_name)
+
+    derivatives = []
+    proto = "Out[{0}]= "
+    actual = proto.format(out_index)
+    computed = 0
+    sum_computed = 0.0
+    for line in out.split("\n"):
+        if actual in line:
+            computed += 1
+            derivative = float(line.replace(actual, ""))
+            derivatives.append(_format_number(derivative))
+            sum_computed += derivative
+            if computed == defined_points_size:
+                derivatives.append(_format_number(sum_computed / defined_points_size))
+                computed = 0
+                sum_computed = 0.0
+            out_index += 1
+            actual = proto.format(out_index)
     return derivatives
+
+def _format_number(num):
+    return "{0:.2f}".format(num)
+
+def get_derivatives(function):
+    derivatives = _mathematica_derivatives(function)
+    if derivatives:
+        return derivatives, True, ""
+    derivatives = [0]*(len(function) * len(function[0][0]))
+    return derivatives, False, PROBLEM_DERIVATIVES

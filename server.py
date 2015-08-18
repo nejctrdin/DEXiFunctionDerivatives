@@ -21,15 +21,15 @@ def derivatives():
     raw_function = request.form["function"]
     function, arguments, success, message = parse_function(raw_function)
     raw_function = raw_function.replace("\r", "")
-    
+   
+    derivatives, success1, message1 = [None] * 3
+
     if success:
-        derivatives = get_derivatives(function)
-    else:
-        derivatives = [0]*(len(function)*len(arguments))
-    
+        derivatives, success1, message1 = get_derivatives(function)
+        
     entries = {"raw_function": raw_function,
-               "ok": success,
-               "message": message,
+               "ok": success and success1,
+               "message": " ".join([message, message1]),
                "function": function,
                "arguments": arguments,
                "derivatives": derivatives
