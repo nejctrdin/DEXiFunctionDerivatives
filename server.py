@@ -11,7 +11,6 @@ from dexi import get_derivatives
  
 
 app = Flask(__name__)
-app.config.from_envvar("SETTINGS", silent=True)
 
 @app.route("/")
 def index():
@@ -35,6 +34,7 @@ def derivatives():
                "arguments": arguments,
                "derivatives": derivatives
     }
+
     return render_template("derivatives.html", entries=entries)
 
 if __name__ == "__main__":

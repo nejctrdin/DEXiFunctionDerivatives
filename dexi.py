@@ -1,5 +1,8 @@
 from itertools import product
 from subprocess import check_output
+import random
+import string
+import os.path
 
 NOT_CORRECT_LINES = "Function should be represented in 3 lines!"
 NOT_NUMBER_MULTIPLICITIES_ARG = ("Number of function arguments ({0}) and number "
@@ -55,32 +58,54 @@ def parse_function(f_rep):
 
     return function, arguments, True, ""
 
-def _construct_mathematica_nb_derivatives(function):
+def _mathematica_derivatives(function):
     input_size = len(function[0][0])
 
     contents = []
+    out_index = 1
     problem_rep = "f=Interpolation[{{{0}}}]"
+    format_eval = "N[d{{0}}[{0}]]"
+
+    evaluations = []
     points = []
     for point in function:
         inputs = ",".join(map(str, point[0]))
         output = str(point[1])
         points.append("{{{{{0}}},{1}}}".format(inputs, output))
+        evaluations.append(format_eval.format(inputs))
     joined = ",".join(points)
     problem = problem_rep.format(joined)
     contents.append(problem)
+    out_index += 1
 
     arguments = [chr(ord("a") + i) for i in xrange(input_size)]
     formatted_args = ",".join(arguments)
+
     contents.append("eval=Function[{{{0}}},f[{0}]]".format(formatted_args))
+    out_index += 1
 
     for arg in arguments:
         derivative = "d{1}=Function[{{{0}}},Evaluate[D[eval[{0}],{1}]]]".format(formatted_args, arg)
         contents.append(derivative)
+        out_index += 1
 
-    print "\n".join(contents)
+    for arg in arguments:
+        for evaluation in evaluations:
+            contents.append(evaluation.format(arg))
+
+    _file_name_len = 10
+    _possible_chars = string.ascii_letters + string.digits
+    file_name = "".join([random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
+    while os.path.isfile(file_name):
+        file_name = "".join([random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
+    _file = file(file_name, "w")
+    for line in contents:
+        _file.write(line)
+        _file.write("\n")
+    _file.close()
     
 def get_derivatives(function):
+    _mathematica_derivatives(function)
+    #a = check_output("math -script < tmp.m", shell=True)   
     derivatives = [0]*(len(function) * len(function[0][0]))
-    _construct_mathematica_nb_derivatives(function)
-    a = check_output("math -script < tmp.m", shell=True)   
     return derivatives
