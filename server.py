@@ -68,11 +68,12 @@ def derivatives():
     message1 = ""
     multiplicities = ""
     names = ""
+    image = ""
     if success:
         names = ",".join(arguments)
         multiplicities = raw_function[2]
     if success:
-        derivatives, evaluations, success1, message1 = get_derivatives(function, evaluations)
+        derivatives, evaluations, image, success1, message1 = get_derivatives(function, evaluations)
         print "Query needed {0}s to execute!".format(_format_number(time() - t))
 
     entries = {"raw_function": raw_function,
@@ -87,7 +88,8 @@ def derivatives():
                "license": content._GPL,
                "names": names,
                "multiplicities": multiplicities,
-               "evaluations": evaluations
+               "evaluations": evaluations,
+               "image": image
     }
 
     return render_template("derivatives.html", entries=entries)

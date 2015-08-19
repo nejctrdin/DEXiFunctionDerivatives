@@ -78,6 +78,8 @@ def parse_function(f_rep):
     return function, arguments, req_evaluations, True, ""
 
 def _mathematica_derivatives(function, req_evaluations):
+    first_mul = -1
+    second_mul = -1
     input_size = len(function[0][0])
     defined_points_size = len(function)
 
@@ -89,6 +91,9 @@ def _mathematica_derivatives(function, req_evaluations):
     evaluations = []
     points = []
     for point in function:
+        first_mul = max(first_mul, point[0][0])
+        if len(point[0]) > 1:
+            second_mul = max(second_mul, point[0][1])
         inputs = ",".join(map(str, point[0]))
         output = str(point[1])
         points.append("{{{{{0}}},{1}}}".format(inputs, output))
@@ -117,8 +122,26 @@ def _mathematica_derivatives(function, req_evaluations):
     for req_eval in req_evaluations:
         contents.append(func_eval_prot.format(",".join(req_eval)))
 
-    _file_name_len = 10
     _possible_chars = string.ascii_letters + string.digits
+
+    image_file_name = ""
+
+    if len(arguments) < 3:
+        # we can draw an image
+        image_dir = "static/images/"
+        _image_file_name_len = 10
+        image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
+        while os.path.isfile(image_file_name):
+            image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
+        
+        if len(arguments) == 1:
+            contents.append("plot=Plot[eval[x], {{x, -1, {0}}}]".format(first_mul + 1))
+            contents.append("Export[\"{0}\", plot, ImageSize->{{700, 700}}]".format(image_file_name))
+        else:
+            contents.append("plot=Plot3D[eval[x,y], {{x, -1, {0}}}, {{y, -1, {1}}}]".format(first_mul + 1, second_mul + 1))
+            contents.append("Export[\"{0}\", plot, ImageSize->{{700, 700}}]".format(image_file_name))
+
+    _file_name_len = 10
     file_name = "".join([random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
     while os.path.isfile(file_name):
         file_name = "".join([random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
@@ -140,6 +163,10 @@ def _mathematica_derivatives(function, req_evaluations):
     finished_derivatives = False
     evals = []
     for line in out.split("\n"):
+        if "png" in line:
+            continue
+        if "-Graphics" in line:
+            continue
         if actual in line:
             computed += 1
             if found >= expected:
@@ -160,15 +187,15 @@ def _mathematica_derivatives(function, req_evaluations):
     for i in xrange(len(evals)):
         evaluations.append((req_evaluations[i], str(evals[i])))
 
-    return derivatives, evaluations
+    return derivatives, evaluations, image_file_name.replace("static/images/", "")
 
 def _format_number(num):
     return "{0:.2f}".format(num)
 
 def get_derivatives(function, req_evaluations):
-    derivatives, evaluations = _mathematica_derivatives(function, req_evaluations)
+    derivatives, evaluations, image_file_name = _mathematica_derivatives(function, req_evaluations)
     if derivatives:
-        return derivatives, evaluations, True, ""
+        return derivatives, evaluations, image_file_name, True, ""
     derivatives = [0] * (len(function) * len(function[0][0]))
     evaluations = [0] * len(req_evaluations)
-    return derivatives, evaluations, False, PROBLEM_DERIVATIVES
+    return derivatives, evaluations, "", False, PROBLEM_DERIVATIVES
