@@ -1,5 +1,5 @@
 _TITLE = "DEXi Function to Derivatives"
-_SUBTITLE = "This is a web-service which enables the users to input a DEXi type function (rule-based), and receive back the values of the first (partial) derivatives in the defined points. It also allows for evaluation of other non-integer points in the domain of the function."
+_SUBTITLE = "This is a web-service which enables the users to input a DEXi type function (rule-based), and receive back the values of the first (partial) derivatives in the defined points. It also allows for evaluation of other non-integer points in the domain of the function and plotting the functions with less than three arguments."
 _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
         "This program is free software: you can redistribute it and/or modify\n"
         "it under the terms of the GNU General Public License as published by\n"
