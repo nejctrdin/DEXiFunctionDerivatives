@@ -10,7 +10,7 @@ The application uses *flask* to serve the web pages and does the needed preproce
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.
 
 ## Prerequisites
-To run the server you need <a href="http://flask.pocoo.org/">flask</a> and <a href="http://flask.pocoo.org/">mathematica</a> installed (specifically, `math` must be in your path).
+To run the server you need <a href="http://flask.pocoo.org/">flask</a> and <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
 
 ## Usage
 
