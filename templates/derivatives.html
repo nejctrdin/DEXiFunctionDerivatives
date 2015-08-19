@@ -25,6 +25,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th>Row#</th>
                                         {% for name in entries.arguments %}
                                             <th>{{ name }}</th>
                                         {% endfor %}
@@ -34,6 +35,7 @@
                                 <tbody>
                                     {% for point in entries.function %}
                                         <tr>
+                                                <th>{{ loop.index }}</th>
                                             {% for p in point[0] %}
                                                 <td>{{ p }}</td>
                                             {% endfor %}
