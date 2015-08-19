@@ -67,7 +67,7 @@ def _mathematica_derivatives(function):
 
     contents = []
     out_index = 1
-    problem_rep = "f=Interpolation[{{{0}}}]"
+    problem_rep = "func=Interpolation[{{{0}}}]"
     format_eval = "N[d{{0}}[{0}]]"
 
     evaluations = []
@@ -85,7 +85,7 @@ def _mathematica_derivatives(function):
     arguments = [chr(ord("a") + i) for i in xrange(input_size)]
     formatted_args = ",".join(arguments)
 
-    contents.append("eval=Function[{{{0}}},f[{0}]]".format(formatted_args))
+    contents.append("eval=Function[{{{0}}},func[{0}]]".format(formatted_args))
     out_index += 1
 
     for arg in arguments:
@@ -109,7 +109,7 @@ def _mathematica_derivatives(function):
     _file.close()
     out = check_output("math -script < {0}".format(file_name), shell=True)   
     os.remove(file_name)
-
+    
     derivatives = []
     proto = "Out[{0}]= "
     actual = proto.format(out_index)
@@ -127,6 +127,7 @@ def _mathematica_derivatives(function):
                 sum_computed = 0.0
             out_index += 1
             actual = proto.format(out_index)
+
     return derivatives
 
 def _format_number(num):
