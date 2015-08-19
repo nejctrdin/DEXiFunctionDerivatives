@@ -29,16 +29,48 @@ def index():
 
 @app.route("/get_derivatives", methods=["POST"])
 def derivatives():
+    raw_function = ""
+    if "names" in request.form:
+        values = {}
+        for field in request.form:
+            if field[0] == "v":
+                tmp_f = int(field.replace("v",""))
+                values[tmp_f] = request.form[field]
+
+        value_list = []
+        for field in sorted(values):
+            value_list.append(values[field])
+
+        function_description = []
+        function_description.append("".join(value_list))
+        function_description.append(request.form["names"])
+        function_description.append(request.form["multiplicity"])
+        raw_function = str("\n".join(function_description))
+    elif "function1" in request.form:
+        raw_function = request.form["function"]
+    else:
+        entries = {"raw_function": raw_function,
+                   "ok": False,
+                   "message": "Unsupported operation!",
+                   "title": content._TITLE,
+                   "subtitle": content._SUBTITLE,
+                   "about": content._ABOUT,
+                   "license": content._GPL,
+        }
+        return render_template("derivatives.html", entries=entries)
+
     t = time()
-    raw_function = request.form["function"]
     function, arguments, success, message = parse_function(raw_function)
     raw_function = raw_function.replace("\r", "")
     raw_function = raw_function.split("\n")
-   
     derivatives = None
     success1 = False
     message1 = ""
-
+    multiplicities = ""
+    names = ""
+    if success:
+        names = ",".join(arguments)
+        multiplicities = raw_function[2]
     if success:
         derivatives, success1, message1 = get_derivatives(function)
         print "Query needed {0}s to execute!".format(_format_number(time() - t))
@@ -52,7 +84,9 @@ def derivatives():
                "title": content._TITLE,
                "subtitle": content._SUBTITLE,
                "about": content._ABOUT,
-               "license": content._GPL
+               "license": content._GPL,
+               "names": names,
+               "multiplicities": multiplicities
     }
 
     return render_template("derivatives.html", entries=entries)

@@ -15,7 +15,8 @@ FUNCTION_OUTPUT_INT = "All function outputs should be integers!"
 PROBLEM_DERIVATIVES = "There was a problem constructing derivatives!"
 
 def parse_function(f_rep):
-    split = f_rep.split("\r\n")
+    f_rep = f_rep.replace("\r", "")
+    split = f_rep.split("\n")
     
     if len(split) != 3:
         return None, None, False, NOT_CORRECT_LINES
