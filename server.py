@@ -59,6 +59,9 @@ def derivatives():
 
 if __name__ == "__main__":
     if len(argv) == 2:
-        app.run(port=int(argv[1]))
+        if argv[1] == "license":
+            print content._GPL
+        else:
+            app.run(port=int(argv[1]))
     else:
         app.run()

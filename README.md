@@ -13,7 +13,7 @@ To run the server you need <a href="http://flask.pocoo.org/">flask</a> and <a hr
 ## Usage
 
 ```bash
-python server.py [port]
+python server.py [port|license]
 ```
 
 Then go to `localhost:5000` and input the desired function, for which you require the derivatives.
