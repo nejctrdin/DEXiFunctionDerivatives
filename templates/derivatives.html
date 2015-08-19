@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
 {% block specific %}
+            {% if not entries.ok %}
+            <div class="alert alert-danger" role="alert">
+                Could not parse function! {{ entries.message }}</b>
+            </div>
+            {% endif %}
             <div class="page-header">
                 <h1>Input</h1>
             </div>
@@ -67,9 +72,5 @@
                         </table>
                     </div>
                 </div>
-            {% else %}
-            <div class="alert alert-danger" role="alert">
-                Could not parse function! {{ entries.message }}</b>
-            </div>
             {% endif %}
 {% endblock %}
