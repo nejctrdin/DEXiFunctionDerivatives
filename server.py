@@ -99,4 +99,4 @@ if __name__ == "__main__":
         else:
             app.run(port=int(argv[1]))
     else:
-        app.run(debug=True)
+        app.run()
