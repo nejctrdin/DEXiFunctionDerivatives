@@ -127,6 +127,5 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-
 if __name__ == "__main__":
     unittest.main()
