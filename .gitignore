@@ -3,3 +3,6 @@
 
 # python
 *.pyc
+
+# generated images
+static/images/*.png
