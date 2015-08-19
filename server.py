@@ -46,7 +46,7 @@ def derivatives():
         function_description.append(request.form["names"])
         function_description.append(request.form["multiplicity"])
         raw_function = str("\n".join(function_description))
-    elif "function1" in request.form:
+    elif "function" in request.form:
         raw_function = request.form["function"]
     else:
         entries = {"raw_function": raw_function,
