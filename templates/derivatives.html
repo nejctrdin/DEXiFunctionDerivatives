@@ -17,7 +17,7 @@
             </div>
             {% if entries.ok %}
                 <div class="page-header">
-                    <h1>Tabelaric function</h1>
+                    <h1>Tabelaric Function</h1>
                 </div>
                 <form action="{{ url_for('derivatives') }}" method=post>
                     <div class="row">
@@ -83,5 +83,36 @@
                         </table>
                     </div>
                 </div>
+                {% if entries.evaluations %}
+                    <div class="page-header">
+                        <h1>Function Evaluations</h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Evaluation#</th>
+                                        {% for arg in entries.arguments %}
+                                            <th>{{ arg }}</th>
+                                        {% endfor %}
+                                        <th>Output</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for eval in entries.evaluations %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            {% for inp in eval[0] %}
+                                                <td>{{ inp }}</td>
+                                            {% endfor %}
+                                            <td>{{ eval[1] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
             {% endif %}
 {% endblock %}

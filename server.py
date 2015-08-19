@@ -60,7 +60,7 @@ def derivatives():
         return render_template("derivatives.html", entries=entries)
 
     t = time()
-    function, arguments, success, message = parse_function(raw_function)
+    function, arguments, evaluations, success, message = parse_function(raw_function)
     raw_function = raw_function.replace("\r", "")
     raw_function = raw_function.split("\n")
     derivatives = None
@@ -72,7 +72,7 @@ def derivatives():
         names = ",".join(arguments)
         multiplicities = raw_function[2]
     if success:
-        derivatives, success1, message1 = get_derivatives(function)
+        derivatives, evaluations, success1, message1 = get_derivatives(function, evaluations)
         print "Query needed {0}s to execute!".format(_format_number(time() - t))
 
     entries = {"raw_function": raw_function,
@@ -86,7 +86,8 @@ def derivatives():
                "about": content._ABOUT,
                "license": content._GPL,
                "names": names,
-               "multiplicities": multiplicities
+               "multiplicities": multiplicities,
+               "evaluations": evaluations
     }
 
     return render_template("derivatives.html", entries=entries)
@@ -98,4 +99,4 @@ if __name__ == "__main__":
         else:
             app.run(port=int(argv[1]))
     else:
-        app.run()
+        app.run(debug=True)

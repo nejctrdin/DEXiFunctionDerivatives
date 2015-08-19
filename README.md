@@ -3,6 +3,8 @@ This is an online application which enables the users to input a <a href="http:/
 
 The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values. The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral.
 
+Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats!
+
 The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *mathematica*, and the derivatives are also computed based on the interpolated function.
 
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.
