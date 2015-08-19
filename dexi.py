@@ -48,7 +48,7 @@ def parse_function(f_rep):
             int(output)
         except:
             return None, None, None, False, FUNCTION_OUTPUT_INT
-            
+           
     if len(arguments) != len(multip):
         return None, None, None, False, NOT_NUMBER_MULTIPLICITIES_ARG.format(len(arguments), len(multip))
     
