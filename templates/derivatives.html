@@ -53,7 +53,7 @@
                                 <tr>
                                     <th>Name</th>
                                     {% for point in entries.function %}
-                                        <th>{{ point[0] }}</th>
+                                        <th>{{ (point[0]|string).replace(" ","") }}</th>
                                     {% endfor %}
                                     <th>Average</th>
                                 </tr>
