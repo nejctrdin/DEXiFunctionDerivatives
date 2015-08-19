@@ -10,12 +10,22 @@ from dexi import parse_function
 from dexi import get_derivatives
 from dexi import _format_number
 from time import time
+import content
+from sys import argv
 
 app = Flask(__name__)
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    entries = {"title": content._TITLE,
+               "subtitle": content._SUBTITLE,
+               "about": content._ABOUT,
+               "examples": content._EXAMPLES,
+               "license": content._GPL
+    }
+    return render_template("index.html", entries=entries)
 
 @app.route("/get_derivatives", methods=["POST"])
 def derivatives():
@@ -31,18 +41,24 @@ def derivatives():
 
     if success:
         derivatives, success1, message1 = get_derivatives(function)
+        print "Query needed {0}s to execute!".format(_format_number(time() - t))
 
     entries = {"raw_function": raw_function,
                "ok": success and success1,
                "message": " ".join([message, message1]),
                "function": function,
                "arguments": arguments,
-               "derivatives": derivatives
+               "derivatives": derivatives,
+               "title": content._TITLE,
+               "subtitle": content._SUBTITLE,
+               "about": content._ABOUT,
+               "license": content._GPL
     }
-
-    print "Query needed {}s to execute!".format(_format_number(time() - t))
 
     return render_template("derivatives.html", entries=entries)
 
 if __name__ == "__main__":
-    app.run()
+    if len(argv) == 2:
+        app.run(port=int(argv[1]))
+    else:
+        app.run()

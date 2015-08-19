@@ -1,22 +1,36 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>DEXi function to derivatives</title>
+        <title>{{ entries.title }}</title>
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
     </head>
     <body role="document">
         <div class="container theme-showcase" role="main">
             <div class="jumbotron">
-                <h1>DEXi function to derivatives</h1>
-                <p>This is a web-service which enables the users to input a DEXi type function (rule-based), and receive back the values of the first (partial) derivatives in the defined points.</p>
+                <h1>{{ entries.title }}</h1>
+                <p>{{ entries.subtitle }}</p>
             </div>
             {% block specific %}{% endblock %}
             <div class="page-header">
                 <h1>About</h1>
             </div>
             <div class="well">
-                <p>This is an application</p>
+                {% for line in entries.about.split("\n") %}
+                    <p>{{ line }}</p>
+                {% endfor %}
+            </div>
+            <div class="page-header">
+                <h1>License</h1>
+            </div>
+            <div class="well">
+                {% for par in entries.license.split("\n\n") %}
+                    <p>
+                        {% for line in par.split("\n") %}
+                            {{ line }}<br> 
+                        {% endfor %}
+                    </p>
+                {% endfor %}
             </div>
         </div>
     </body>
