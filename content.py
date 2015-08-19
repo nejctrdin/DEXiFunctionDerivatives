@@ -14,7 +14,12 @@ _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
         "You should have received a copy of the GNU General Public License\n"
         "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
 
-_ABOUT = "This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\nThe functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values. The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral.\nAny subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats!\nFor exact syntax check the examples above.\nYou can check the code and possibly contribute at <a href=\"https://github.com/nejctrdin/DEXiFunctionDerivatives\">github</a>."
+_ABOUT = ("This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\n"
+          "The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values. The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
+          "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats!\n"
+          "For exact syntax check the examples above.\n"
+          "The app was developed using <a href=\"http://flask.pocoo.org/\">flask</a> for serving and GUI (integrating python scripts) and <a href=\"http://www.wolfram.com/mathematica/\">mathematica</a> is used in the backend for constructing the interpolating functions (using splines) and evaluating the constructed functions.\n"
+          "You can check the code and possibly contribute at <a href=\"https://github.com/nejctrdin/DEXiFunctionDerivatives\">github</a>.")
 
 _EXAMPLE1 = ("Linear in one variable", "012 first 3")
 _EXAMPLE2 = ("Linear in two variables", "012123234 first,second 3,3")
