@@ -5,6 +5,8 @@ The functions is defined in three lines: the first line gives the integer output
 
 Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats!
 
+Functions with one or two arguments are also displayed while evaluating!
+
 The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *mathematica*, and the derivatives are also computed based on the interpolated function.
 
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.

@@ -16,7 +16,8 @@ _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
 
 _ABOUT = ("This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\n"
           "The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values. The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
-          "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats!\n"
+          "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats! These points are evaluated against the constructed interpolating function.\n"
+          "Functions with one or two arguments are also displayed while evaluating!"
           "For exact syntax check the examples above.\n"
           "The app was developed using <a href=\"http://flask.pocoo.org/\">flask</a> for serving and GUI (integrating python scripts) and <a href=\"http://www.wolfram.com/mathematica/\">mathematica</a> is used in the backend for constructing the interpolating functions (using splines) and evaluating the constructed functions.\n"
           "You can check the code and possibly contribute at <a href=\"https://github.com/nejctrdin/DEXiFunctionDerivatives\">github</a>.")
