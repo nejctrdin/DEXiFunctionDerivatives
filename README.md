@@ -1,7 +1,7 @@
 # DEXiFunctionDerivatives
 This is an online application which enables the users to input a <a href="http://kt.ijs.si/MarkoBohanec/dexi.html">DEXi</a> type function, and produces the values of first partial derivatives in the function's defined points.
 
-The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values (the values can be concatenated together, if they are all less than 10 and at least 0, otherwise they must be comma separated). The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral.
+The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values (the values can be concatenated together - as in *dxi* file - if they are all less than 10 and at least 0, otherwise they must be comma separated). The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral.
 
 Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats!
 
