@@ -16,6 +16,7 @@ class TestDexi(unittest.TestCase):
     _LARGE_TEST = "423120124321201212013024421\nf,s,t\n3,3,3\n1,2,3\n0.1,0.2,0.3"
 
     def test_empty(self):
+        # test if empty function produces errors
         function, arguments, evaluations, success, message = dexi.parse_function(self._EMPTY_FUNCTION)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -24,6 +25,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "Function should be represented in at least 3 lines!")
 
     def test_eval_arguments(self):
+        # test if evaluation arguments have the same length as the inputs
         function, arguments, evaluations, success, message = dexi.parse_function(self._INCORRECT_EVAL_ARGS)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -32,6 +34,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "Number of function arguments (1) does not match number of supplied evaluation arguments (2) - ['1', '2'].")
 
     def test_eval_arguments_type(self):
+        # test if types of evaluation arguments can be cast to floats
         function, arguments, evaluations, success, message = dexi.parse_function(self._INCORRECT_EVAL_ARGS_TYPE)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -40,6 +43,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "All function evaluations should be floats ['a']!")
 
     def test_func_output_type(self):
+        # test if inputs to function can be cast to ints
         function, arguments, evaluations, success, message = dexi.parse_function(self._INCORRECT_FUN_OUTPUT)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -48,6 +52,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "All function outputs should be integers!")
 
     def test_multiplicities(self):
+        # test if the number of arguments matches the number of supplied multiplicities
         function, arguments, evaluations, success, message = dexi.parse_function(self._INCORRECT_MULTIPLICITIES)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -56,6 +61,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "Number of function arguments (2) and number of multiplicities (3) should be equal!")
 
     def test_multiplicities_type(self):
+        # test if multiplicities can be cast to integers
         function, arguments, evaluations, success, message = dexi.parse_function(self._INCORRECT_MULTIPLICITIES_TYPE)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -64,6 +70,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "Multiplicities should be integers! Muliplicity 2 is not!")
 
     def test_input_output_size(self):
+        # test if function output length is equal to the multiplied multiplicities
         function, arguments, evaluations, success, message = dexi.parse_function(self._INCORRECT_N_INPUT_OUTPUT)
         self.assertEqual(function, None)
         self.assertEqual(arguments, None)
@@ -72,6 +79,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "The input space size (12) does not match output space size (9)!")
 
     def test_small(self):
+        # a small test case
         function, arguments, evaluations, success, message = dexi.parse_function(self._SMALL_TEST)
         self.assertEqual(function, [[(0,), 0], [(1,), 1], [(2,), 2]])
         self.assertEqual(arguments, ["f"])
@@ -89,6 +97,7 @@ class TestDexi(unittest.TestCase):
         os.remove("".join(["static/images/", image]))
 
     def test_medium(self):
+        # medium test case
         function, arguments, evaluations, success, message = dexi.parse_function(self._MEDIUM_TEST)
         self.assertEqual(function, [[(0, 0), 0], [(0, 1), 1], [(0, 2), 2], [(1, 0), 1], [(1, 1), 2],
                                     [(1, 2), 3], [(2, 0), 2], [(2, 1), 3], [(2, 2), 4]])
@@ -107,6 +116,7 @@ class TestDexi(unittest.TestCase):
         os.remove("".join(["static/images/", image]))
 
     def test_large(self):
+        # large test case
         function, arguments, evaluations, success, message = dexi.parse_function(self._LARGE_TEST)
         self.assertEqual(function, [[(0, 0, 0), 4], [(0, 0, 1), 2], [(0, 0, 2), 3], [(0, 1, 0), 1], [(0, 1, 1), 2],
                                     [(0, 1, 2), 0], [(0, 2, 0), 1], [(0, 2, 1), 2], [(0, 2, 2), 4], [(1, 0, 0), 3],
@@ -136,6 +146,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "")
 
     def test_error_2argument(self):
+        # test if construction of a two argument function produces the expected errors
         self.assertRaisesRegexp(
                 ValueError,
                 "Multiplicity of the first attribute must be more than 0.",
@@ -151,6 +162,7 @@ class TestDexi(unittest.TestCase):
         self.assertRaises(TypeError, dexi.create_2argument_function, 1, 5, lambda x,y,z: x + y + z)
 
     def test_2argument(self):
+        # test that we get the expected functions back
         func = dexi.create_2argument_function(2, 2, min)
         self.assertEqual(func, "0,0,0,1 first,second 2,2")
 
