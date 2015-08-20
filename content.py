@@ -17,7 +17,7 @@ _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
         "GNU General Public License for more details.\n\n"
 
         "You should have received a copy of the GNU General Public License\n"
-        "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
+        "along with this program.  If not, see <a href=\"http://www.gnu.org/licenses/\">licenses</a>.")
 
 # the about box
 _ABOUT = ("This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\n"
@@ -37,8 +37,8 @@ _EXAMPLE4 = ("Random function", "423120124321201212013024421 first,second,third 
 _EXAMPLE5 = ("Large example", "333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333001001111122222222122122222222233233223223233233333333000000011011222222112112222222222222222222222223333333 v1,v2,v3,v4,v5,v6 2,2,3,3,2,3")
 _EXAMPLE6 = ("Linear in two variables with inputs", "012123234 first,second 3,3 1.5,2 3.3,4")
 _EXAMPLE7 = ("first*second + first", "0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,8,9,10,2,4,6,8,10,12,14,16,18,20,3,6,9,12,15,18,21,24,27,30,4,8,12,16,20,24,28,32,36,40,5,10,15,20,25,30,35,40,45,50,6,12,18,24,30,36,42,48,54,60,7,14,21,28,35,42,49,56,63,70,8,16,24,32,40,48,56,64,72,80,9,18,27,36,45,54,63,72,81,90 first,second 10,10")
-_EXAMPLE8 = ("Minimum of arguments", "0,0,0,0,0,0,1,1,1,1,0,1,2,2,2,0,1,2,3,3,0,1,2,3,4 first,second 5,5")
-_EXAMPLE9 = ("Maximum of arguments", "0,1,2,3,4,1,1,2,3,4,2,2,2,3,4,3,3,3,3,4,4,4,4,4,4 first,second 5,5")
+_EXAMPLE8 = ("Minimum of arguments", "0000001111012220123301234 first,second 5,5")
+_EXAMPLE9 = ("Maximum of arguments", "0123411234222343333444444 first,second 5,5")
 _EXAMPLE10 = ("Product of arguments", "0,0,0,0,0,0,1,2,3,4,0,2,4,6,8,0,3,6,9,12,0,4,8,12,16 first,second 5,5")
 _EXAMPLE11 = ("first+second + 1.5", "1.5,2.5,2.5,3.5 first,second 2,2")
 
