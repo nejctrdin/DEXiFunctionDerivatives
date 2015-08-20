@@ -163,5 +163,6 @@ class TestDexi(unittest.TestCase):
         func = dexi.create_2argument_function(2, 2, lambda x,y: x * y)
         self.assertEqual(func, "0,0,0,1 first,second 2,2")
 
+
 if __name__ == "__main__":
     unittest.main()
