@@ -27,7 +27,7 @@
             <div class="well">
                 {% for par in entries.license.split("\n\n") %}
                     <p>
-                        {{ par }} 
+                        {{ par|safe }} 
                     </p>
                 {% endfor %}
             </div>
