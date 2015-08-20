@@ -1,5 +1,10 @@
+# the title of the app
 _TITLE = "DEXi Function to Derivatives"
+
+# the subtitle appearing in the banner
 _SUBTITLE = "This is a web-service which enables the users to input a DEXi type function (rule-based), and receive back the values of the first (partial) derivatives in the defined points. It also allows for evaluation of other non-integer points in the domain of the function and plotting the functions with less than three arguments."
+
+# the GPL license
 _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
         "This program is free software: you can redistribute it and/or modify\n"
         "it under the terms of the GNU General Public License as published by\n"
@@ -14,6 +19,7 @@ _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
         "You should have received a copy of the GNU General Public License\n"
         "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
 
+# the about box
 _ABOUT = ("This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\n"
           "The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values (the values can be concatenated together, if they are all less than 10 and at least 0, otherwise they must be comma separated). The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
           "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats! These points are evaluated against the constructed interpolating function.\n"
@@ -22,6 +28,8 @@ _ABOUT = ("This is an application which enables the users to input a DEXi type f
           "The app was developed using <a href=\"http://flask.pocoo.org/\">flask</a> for serving and GUI (integrating python scripts) and <a href=\"http://www.wolfram.com/mathematica/\">mathematica</a> is used in the backend for constructing the interpolating functions (using splines) and evaluating the constructed functions.\n"
           "You can check the code and possibly contribute at <a href=\"https://github.com/nejctrdin/DEXiFunctionDerivatives\">github</a>.")
 
+# examples put onto the page
+# each example is a 2-tuple, firstly the description and then the function
 _EXAMPLE1 = ("Linear in one variable", "012 first 3")
 _EXAMPLE2 = ("Linear in two variables", "012123234 first,second 3,3")
 _EXAMPLE3 = ("Monotone function", "000000001000111122112333344 first,second,third 3,3,3")
@@ -33,5 +41,5 @@ _EXAMPLE8 = ("Minimum of arguments", "0,0,0,0,0,0,1,1,1,1,0,1,2,2,2,0,1,2,3,3,0,
 _EXAMPLE9 = ("Maximum of arguments", "0,1,2,3,4,1,1,2,3,4,2,2,2,3,4,3,3,3,3,4,4,4,4,4,4 first,second 5,5")
 _EXAMPLE10 = ("Product of arguments", "0,0,0,0,0,0,1,2,3,4,0,2,4,6,8,0,3,6,9,12,0,4,8,12,16 first,second 5,5")
 
-
+# the joined examples
 _EXAMPLES = [_EXAMPLE1, _EXAMPLE2, _EXAMPLE3, _EXAMPLE4, _EXAMPLE5, _EXAMPLE6, _EXAMPLE7, _EXAMPLE8, _EXAMPLE9, _EXAMPLE10]
