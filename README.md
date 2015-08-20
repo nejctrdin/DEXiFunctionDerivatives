@@ -22,6 +22,12 @@ python server.py [port|license]
 
 Then go to `localhost:5000` and input the desired function, for which you require the derivatives.
 
+You can also run it using *gunicorn* for paralell execution.
+
+```bash
+gunicorn server:app -w workers -b address:port server:app
+```
+
 ## License
 
 ```
