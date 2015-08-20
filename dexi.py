@@ -209,9 +209,9 @@ def _mathematica_derivatives(function, req_evaluations):
     # we create a file name, which does not exist, for storing the contents
     # of the mathematica code
     _file_name_len = 10
-    file_name = "".join([random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
+    file_name = "".join(["mathematica_files/"] + [random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
     while os.path.isfile(file_name):
-        file_name = "".join([random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
+        file_name = "".join(["mathematica_files/"] + [random.choice(_possible_chars) for _ in xrange(_file_name_len)] + [".m"])
 
     # we open a file and write the contents to it
     _file = file(file_name, "w")

@@ -6,3 +6,6 @@
 
 # generated images
 static/images/*.png
+
+# mathematica files
+mathematica_files/*
