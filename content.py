@@ -21,7 +21,7 @@ _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
 
 # the about box
 _ABOUT = ("This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\n"
-          "The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values (the values can be concatenated together, if they are all less than 10 and at least 0, otherwise they must be comma separated). The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
+          "The functions is defined in three lines: the first line gives the float output for the corresponding sorted input values (the values can be concatenated together, if they are all less than 10 and at least 0 and integers, otherwise they must be comma separated). The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
           "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats! These points are evaluated against the constructed interpolating function.\n"
           "Functions with one or two arguments are also displayed while evaluating!"
           "For exact syntax check the examples above.\n"
@@ -40,6 +40,8 @@ _EXAMPLE7 = ("first*second + first", "0,0,0,0,0,0,0,0,0,0,1,2,3,4,5,6,7,8,9,10,2
 _EXAMPLE8 = ("Minimum of arguments", "0,0,0,0,0,0,1,1,1,1,0,1,2,2,2,0,1,2,3,3,0,1,2,3,4 first,second 5,5")
 _EXAMPLE9 = ("Maximum of arguments", "0,1,2,3,4,1,1,2,3,4,2,2,2,3,4,3,3,3,3,4,4,4,4,4,4 first,second 5,5")
 _EXAMPLE10 = ("Product of arguments", "0,0,0,0,0,0,1,2,3,4,0,2,4,6,8,0,3,6,9,12,0,4,8,12,16 first,second 5,5")
+_EXAMPLE11 = ("first+second + 1.5", "1.5,2.5,2.5,3.5 first,second 2,2")
 
 # the joined examples
-_EXAMPLES = [_EXAMPLE1, _EXAMPLE2, _EXAMPLE3, _EXAMPLE4, _EXAMPLE5, _EXAMPLE6, _EXAMPLE7, _EXAMPLE8, _EXAMPLE9, _EXAMPLE10]
+_EXAMPLES = [_EXAMPLE1, _EXAMPLE2, _EXAMPLE3, _EXAMPLE4, _EXAMPLE5, _EXAMPLE6,
+             _EXAMPLE7, _EXAMPLE8, _EXAMPLE9, _EXAMPLE10, _EXAMPLE11]

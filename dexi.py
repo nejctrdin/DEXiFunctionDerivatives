@@ -2,7 +2,6 @@ from itertools import product
 from subprocess import check_output
 import random
 import string
-import os.path
 import os
 
 # different error statuses given back to the user in case of problems
@@ -12,7 +11,7 @@ NOT_NUMBER_MULTIPLICITIES_ARG = ("Number of function arguments ({0}) and number 
 MULTIPLICITIES_INT = "Multiplicities should be integers! Muliplicity {0} is not!"
 INPUT_OUTPUT_NOT_MATCHING = ("The input space size ({0}) does not match output "
                              "space size ({1})!")
-FUNCTION_OUTPUT_INT = "All function outputs should be integers!"
+FUNCTION_OUTPUT_FLOAT = "All function outputs should be floats!"
 FUNCTION_EVALUATIONS_FLOAT = "All function evaluations should be floats {0}!"
 PROBLEM_DERIVATIVES = "There was a problem constructing derivatives!"
 NOT_CORRECT_ARGUMENTS_EVAL = "Number of function arguments ({0}) does not match number of supplied evaluation arguments ({1}) - {2}."
@@ -41,9 +40,9 @@ def parse_function(f_rep):
     # test that function outputs can be cast to integers
     for output in function_outputs:
         try:
-            int(output)
+            float(output)
         except:
-            return None, None, None, False, FUNCTION_OUTPUT_INT
+            return None, None, None, False, FUNCTION_OUTPUT_FLOAT
            
     # test that length of arguments is the same as the length of the multiplicities
     if len(arguments) != len(multip):
@@ -95,7 +94,7 @@ def parse_function(f_rep):
     function = []
     i = 0
     for point in product(*input_space):
-        tmp = [point, int(function_outputs[i])]
+        tmp = [point, float(function_outputs[i])]
         function.append(tmp)
         i += 1
 
