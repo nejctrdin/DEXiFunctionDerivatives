@@ -135,5 +135,33 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
+    def test_error_2argument(self):
+        self.assertRaisesRegexp(
+                ValueError,
+                "Multiplicity of the first attribute must be more than 0.",
+                dexi.create_2argument_function, -1, 5, None)
+        self.assertRaisesRegexp(
+                ValueError,
+                "Multiplicity of the second attribute must be more than 0.",
+                dexi.create_2argument_function, 2, -1, None)
+        self.assertRaises(TypeError, dexi.create_2argument_function, 1, 5, None)
+
+        self.assertRaises(TypeError, dexi.create_2argument_function, 1, 5, lambda x: x)
+
+        self.assertRaises(TypeError, dexi.create_2argument_function, 1, 5, lambda x,y,z: x + y + z)
+
+    def test_2argument(self):
+        func = dexi.create_2argument_function(2, 2, min)
+        self.assertEqual(func, "0,0,0,1 first,second 2,2")
+
+        func = dexi.create_2argument_function(2, 2, max)
+        self.assertEqual(func, "0,1,1,1 first,second 2,2")
+
+        func = dexi.create_2argument_function(2, 2, lambda x,y: x + y)
+        self.assertEqual(func, "0,1,1,2 first,second 2,2")
+
+        func = dexi.create_2argument_function(2, 2, lambda x,y: x * y)
+        self.assertEqual(func, "0,0,0,1 first,second 2,2")
+
 if __name__ == "__main__":
     unittest.main()

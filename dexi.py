@@ -201,3 +201,22 @@ def get_derivatives(function, req_evaluations):
     derivatives = [0] * (len(function) * len(function[0][0]))
     evaluations = [0] * len(req_evaluations)
     return derivatives, evaluations, "", False, PROBLEM_DERIVATIVES
+
+def create_2argument_function(mul_f, mul_s, function):
+    if mul_f < 1:
+        raise ValueError("Multiplicity of the first attribute must be more than 0.")
+
+    if mul_s < 1:
+        raise ValueError("Multiplicity of the second attribute must be more than 0.")
+
+    function_values = []
+    for i in xrange(mul_f):
+        for j in xrange(mul_s):
+            function_values.append(str(function(i, j)))
+
+    output = []
+    output.append(",".join(function_values))
+    output.append("first,second")
+    output.append(",".join([str(mul_f), str(mul_s)]))
+
+    return " ".join(output)
