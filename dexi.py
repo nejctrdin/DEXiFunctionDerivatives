@@ -24,6 +24,8 @@ def parse_function(f_rep):
         return None, None, None, False, NOT_CORRECT_LINES
 
     function_outputs = split[0]
+    if "," in function_outputs:
+        function_outputs = function_outputs.split(",")
     output_size = len(function_outputs)
     arguments = split[1].replace(" ","").split(",")
     multip = split[2].replace(" ","").split(",")

@@ -42,7 +42,7 @@ def derivatives():
             value_list.append(values[field])
 
         function_description = []
-        function_description.append("".join(value_list))
+        function_description.append(",".join(value_list))
         function_description.append(request.form["names"])
         function_description.append(request.form["multiplicity"])
         raw_function = str("\n".join(function_description))
@@ -101,4 +101,4 @@ if __name__ == "__main__":
         else:
             app.run(port=int(argv[1]))
     else:
-        app.run()
+        app.run(debug=True)

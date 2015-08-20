@@ -15,7 +15,7 @@ _GPL = ("Copyright (C) 2015  Nejc Trdin\n\n"
         "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
 
 _ABOUT = ("This is an application which enables the users to input a DEXi type function, and produces the values of first partial derivatives in the function's defined points.\n"
-          "The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values. The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
+          "The functions is defined in three lines: the first line gives the integer output for the corresponding sorted input values (the values can be concatenated together, if they are all less than 10 and at least 0, otherwise they must be comma separated). The inputs are sorted firstly by the first attribute, then second, etc. The second line of the function gives the names of the input attributes, delimited by a comma. The last line gives the sizes of the respective input's scales, which are also integral (comma delimited).\n"
           "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats! These points are evaluated against the constructed interpolating function.\n"
           "Functions with one or two arguments are also displayed while evaluating!"
           "For exact syntax check the examples above.\n"
