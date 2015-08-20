@@ -94,6 +94,7 @@ def derivatives():
 
     return render_template("derivatives.html", entries=entries)
 
+
 if __name__ == "__main__":
     if len(argv) == 2:
         if argv[1] == "license":
