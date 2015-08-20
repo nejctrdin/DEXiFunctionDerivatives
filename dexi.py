@@ -5,6 +5,7 @@ import string
 import os.path
 import os
 
+# different error statuses given back to the user in case of problems
 NOT_CORRECT_LINES = "Function should be represented in at least 3 lines!"
 NOT_NUMBER_MULTIPLICITIES_ARG = ("Number of function arguments ({0}) and number "
                                  "of multiplicities ({1}) should be equal!")
@@ -17,43 +18,38 @@ PROBLEM_DERIVATIVES = "There was a problem constructing derivatives!"
 NOT_CORRECT_ARGUMENTS_EVAL = "Number of function arguments ({0}) does not match number of supplied evaluation arguments ({1}) - {2}."
 
 def parse_function(f_rep):
+    # the function that parses the input string
+
+    # removing the \r chars and splitting the function by new lines
     f_rep = f_rep.replace("\r", "")
     split = f_rep.split("\n")
     
     if len(split) < 3:
+        # function must be at least three lines long
         return None, None, None, False, NOT_CORRECT_LINES
 
     function_outputs = split[0]
     if "," in function_outputs:
+        # see if function outputs are comma delimited
         function_outputs = function_outputs.split(",")
+
+    # get the output size, arguments and multiplicities
     output_size = len(function_outputs)
     arguments = split[1].replace(" ","").split(",")
     multip = split[2].replace(" ","").split(",")
 
-    req_evaluations = [] 
-    if len(split) > 3:
-        for e in split[3:]:
-            evaluation = e.replace(" ","").split(",")
-            if len(evaluation) != len(arguments):
-                return None, None, None, False, NOT_CORRECT_ARGUMENTS_EVAL.format(len(arguments), len(evaluation), map(str, evaluation))
-
-            for e in evaluation:
-                try:
-                    float(e)
-                except:
-                    return None, None, None, False, FUNCTION_EVALUATIONS_FLOAT.format(map(str,evaluation))
-
-            req_evaluations.append(evaluation)
-
+    # test that function outputs can be cast to integers
     for output in function_outputs:
         try:
             int(output)
         except:
             return None, None, None, False, FUNCTION_OUTPUT_INT
            
+    # test that length of arguments is the same as the length of the multiplicities
     if len(arguments) != len(multip):
         return None, None, None, False, NOT_NUMBER_MULTIPLICITIES_ARG.format(len(arguments), len(multip))
-    
+
+    # check that multiplicities can be cast to integers
     i = 1
     for mutiplicity in multip:
         try:
@@ -62,14 +58,40 @@ def parse_function(f_rep):
             return None, None, None, False, MULTIPLICITIES_INT.format(i)
         i+=1
 
+    # get the input space from the multiplicities
     input_sizes = map(int, multip)
     input_size = reduce(lambda x,y: x*y, input_sizes)
-    
+
+    # check that input space matches the size of the output space
     if input_size != output_size:
         return None, None, None, False, INPUT_OUTPUT_NOT_MATCHING.format(input_size, output_size)
 
+    # possible evaluations
+    req_evaluations = []
+    if len(split) > 3:
+        # iterate over all evaluations appearing after the third line
+        for e in split[3:]:
+            # split them
+            evaluation = e.replace(" ","").split(",")
+
+            # see if the length is the same as the length of arguments
+            if len(evaluation) != len(arguments):
+                return None, None, None, False, NOT_CORRECT_ARGUMENTS_EVAL.format(len(arguments), len(evaluation), map(str, evaluation))
+
+            for e in evaluation:
+                # check that the evaluations can be cast to floats
+                try:
+                    float(e)
+                except:
+                    return None, None, None, False, FUNCTION_EVALUATIONS_FLOAT.format(map(str,evaluation))
+
+            # finally add them to the list
+            req_evaluations.append(evaluation)
+
+    # create the input space
     input_space = [xrange(size) for size in input_sizes]
 
+    # define the function
     function = []
     i = 0
     for point in product(*input_space):
@@ -77,6 +99,7 @@ def parse_function(f_rep):
         function.append(tmp)
         i += 1
 
+    # return the function, arguments, requested evaluations, status and message
     return function, arguments, req_evaluations, True, ""
 
 def _mathematica_derivatives(function, req_evaluations):
@@ -192,31 +215,45 @@ def _mathematica_derivatives(function, req_evaluations):
     return derivatives, evaluations, image_file_name.replace("static/images/", "")
 
 def _format_number(num):
+    # a function that formats a number as string with two digits after dot
     return "{0:.2f}".format(num)
 
 def get_derivatives(function, req_evaluations):
+    # the function which calls the interior function of this file
     derivatives, evaluations, image_file_name = _mathematica_derivatives(function, req_evaluations)
+
     if derivatives:
+        # if derivatives exist, then return success
         return derivatives, evaluations, image_file_name, True, ""
+
+    # otherwise create empty lists and return
     derivatives = [0] * (len(function) * len(function[0][0]))
     evaluations = [0] * len(req_evaluations)
     return derivatives, evaluations, "", False, PROBLEM_DERIVATIVES
 
 def create_2argument_function(mul_f, mul_s, function):
+    # function creates a by-point-defined function of 2 arguments with
+    # multiplicities of the first and the second argument given
+    # also the function expects a function which is applicable on two arguments
+
+    # check if multiplicities are above 0
     if mul_f < 1:
         raise ValueError("Multiplicity of the first attribute must be more than 0.")
 
     if mul_s < 1:
         raise ValueError("Multiplicity of the second attribute must be more than 0.")
 
+    # create iterators and apply function
     function_values = []
     for i in xrange(mul_f):
         for j in xrange(mul_s):
             function_values.append(str(function(i, j)))
 
+    # format the function as per specification
     output = []
     output.append(",".join(function_values))
     output.append("first,second")
     output.append(",".join([str(mul_f), str(mul_s)]))
 
+    # return the string representation of the function
     return " ".join(output)
