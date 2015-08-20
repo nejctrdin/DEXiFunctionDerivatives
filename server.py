@@ -123,6 +123,7 @@ def derivatives():
 
 
 if __name__ == "__main__":
+    _HOST = "0.0.0.0"
     # parse arguments
     if len(argv) == 2:
         # if license must be displayed
@@ -130,7 +131,7 @@ if __name__ == "__main__":
             print content._GPL
         else:
             # otherwise treat the argument as port number
-            app.run(port=int(argv[1]))
+            app.run(host=_HOST, port=int(argv[1]))
     else:
         # otherwise just run the app on the app-decided port
-        app.run()
+        app.run(host=_HOST)
