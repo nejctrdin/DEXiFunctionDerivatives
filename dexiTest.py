@@ -49,7 +49,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(arguments, None)
         self.assertEqual(evaluations, None)
         self.assertEqual(success, False)
-        self.assertEqual(message, "All function outputs should be integers!")
+        self.assertEqual(message, "All function outputs should be floats!")
 
     def test_multiplicities(self):
         # test if the number of arguments matches the number of supplied multiplicities
