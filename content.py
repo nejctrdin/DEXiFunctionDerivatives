@@ -41,7 +41,8 @@ _EXAMPLE8 = ("Minimum of arguments", "0000001111012220123301234 first,second 5,5
 _EXAMPLE9 = ("Maximum of arguments", "0123411234222343333444444 first,second 5,5")
 _EXAMPLE10 = ("Product of arguments", "0,0,0,0,0,0,1,2,3,4,0,2,4,6,8,0,3,6,9,12,0,4,8,12,16 first,second 5,5")
 _EXAMPLE11 = ("first+second + 1.5", "1.5,2.5,2.5,3.5 first,second 2,2")
+_EXAMPLE12 = ("first*second - second", "0,-1,-2,-3,-4,0,0,0,0,0,0,1,2,3,4,0,2,4,6,8,0,3,6,9,12 first,second 5,5")
 
 # the joined examples
 _EXAMPLES = [_EXAMPLE1, _EXAMPLE2, _EXAMPLE3, _EXAMPLE4, _EXAMPLE5, _EXAMPLE6,
-             _EXAMPLE7, _EXAMPLE8, _EXAMPLE9, _EXAMPLE10, _EXAMPLE11]
+             _EXAMPLE7, _EXAMPLE8, _EXAMPLE9, _EXAMPLE10, _EXAMPLE11, _EXAMPLE12]
