@@ -287,29 +287,37 @@ def _scipy_derivatives(function, req_evaluations):
 
     # input size (number of arguments) and number of points
     input_size = len(function[0][0])
+    # size of the function
     defined_points_size = len(function)
+
+    # get the multiplicities of the arguments
     max_values = [-1] * input_size
     for point, output in function:
         for i in xrange(len(point)):
             max_values[i] = max(max_values[i], point[i])
 
+    # create the space for the function inputs
     space = [np.array(xrange(max_val + 1)) for max_val in max_values]
     fun = []
+
+    # create the mesh for function inputs
     for point, output in function:
         current = fun
         for i in xrange(len(point)):
-            if len(current) - 1< point[i]:
+            if len(current) - 1 < point[i]:
                 current.append([])
             current = current[point[i]]
         current.append(output)
     data = np.array(fun)
 
+    # create the interpolating spline
     interpolating = RegularGridInterpolator(tuple(space),
             data,
             bounds_error=False,
             fill_value=None
     )
 
+    # an inline function for computing partial derivatives
     def partial_derivative(func, var=0, point=[]):
         args = point[:]
         def wraps(x):
@@ -317,24 +325,29 @@ def _scipy_derivatives(function, req_evaluations):
             return func(args)
         return derivative(wraps, point[var], dx=1e-6)
 
+    # list of derivatives
     derivatives = []
     SUM = 0.0
     N = 0
     for i in xrange(input_size):
         for point, _ in function:
+            # add the derivatives
             d = partial_derivative(interpolating, i, list(point))[0][0]
             derivatives.append(_format_number(d))
             SUM += d
             N+=1
+        # finally add the average
         derivatives.append(_format_number(SUM/N))
         SUM = 0.0
         N = 0
 
+    # fill the required evaluations
     evaluations = []
     for ev in req_evaluations:
         e = interpolating(map(float, ev))[0][0]
         evaluations.append((ev, _format_number(e)))
 
+    # create the filename for the possible image
     image_file_name = ""
     image_dir = "static/images/"
 
@@ -349,6 +362,7 @@ def _scipy_derivatives(function, req_evaluations):
             image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
 
         if input_size == 1:
+            # if input size is 1, we have a 2D image
             fig = plt.figure()
             X = np.arange(-1, max_values[0] + 1, 0.1)
             Y = []
@@ -357,6 +371,7 @@ def _scipy_derivatives(function, req_evaluations):
             plt.plot(X, Y)
             plt.savefig(image_file_name)
         else:
+            # otherwise we have a 3D image
             fig = plt.figure()
             ax = fig.gca(projection="3d")
             X = np.arange(-1, max_values[0] + 1, 0.1)
