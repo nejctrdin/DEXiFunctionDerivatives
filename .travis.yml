@@ -5,5 +5,5 @@ python:
 install:
     - pip install numpy
     - pip install matplotlib
-    - pip install scipy
+    - easy_install scipy
 script: python dexiTest.py
