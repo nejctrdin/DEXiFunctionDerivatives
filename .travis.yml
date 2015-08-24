@@ -19,3 +19,4 @@ before_install:
     - cd scipy-0.14.0
     - python setup.py build
     - python setup.py install
+    - cd ..
