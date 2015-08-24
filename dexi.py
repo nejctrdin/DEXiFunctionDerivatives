@@ -1,5 +1,11 @@
+import numpy as np
+from scipy.interpolate import RegularGridInterpolator
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 from itertools import product
 from subprocess import check_output
+from scipy.misc import derivative
 import random
 import string
 import os
@@ -187,10 +193,10 @@ def _mathematica_derivatives(function, req_evaluations):
 
     # empty image file name
     image_file_name = ""
+    image_dir = "static/images/"
 
     if len(arguments) < 3:
         # we can draw an image if there are 1 or 2 arguments
-        image_dir = "static/images/"
         _image_file_name_len = 10
         # create a file name, that is not present in the directory
         image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
@@ -272,7 +278,103 @@ def _mathematica_derivatives(function, req_evaluations):
         evaluations.append((req_evaluations[i], str(evals[i])))
 
     # return the derivatives, evaluations, and image file name
-    return derivatives, evaluations, image_file_name.replace("static/images/", "")
+    return derivatives, evaluations, image_file_name.replace(image_dir, "")
+
+def _scipy_derivatives(function, req_evaluations):
+    # the function expects a correct form of a function as parsed above and evaluation points
+    # then it constructs an interpolating function using scipy interpolate utility, parses the
+    # results and returns them
+
+    # input size (number of arguments) and number of points
+    input_size = len(function[0][0])
+    defined_points_size = len(function)
+    max_values = [-1] * input_size
+    for point, output in function:
+        for i in xrange(len(point)):
+            max_values[i] = max(max_values[i], point[i])
+
+    space = [np.array(xrange(max_val + 1)) for max_val in max_values]
+    fun = []
+    for point, output in function:
+        current = fun
+        for i in xrange(len(point)):
+            if len(current) - 1< point[i]:
+                current.append([])
+            current = current[point[i]]
+        current.append(output)
+    data = np.array(fun)
+
+    interpolating = RegularGridInterpolator(tuple(space),
+            data,
+            bounds_error=False,
+            fill_value=None
+    )
+
+    def partial_derivative(func, var=0, point=[]):
+        args = point[:]
+        def wraps(x):
+            args[var] = x
+            return func(args)
+        return derivative(wraps, point[var], dx=1e-6)
+
+    derivatives = []
+    SUM = 0.0
+    N = 0
+    for i in xrange(input_size):
+        for point, _ in function:
+            d = partial_derivative(interpolating, i, list(point))[0][0]
+            derivatives.append(_format_number(d))
+            SUM += d
+            N+=1
+        derivatives.append(_format_number(SUM/N))
+        SUM = 0.0
+        N = 0
+
+    evaluations = []
+    for ev in req_evaluations:
+        e = interpolating(map(float, ev))[0][0]
+        evaluations.append((ev, _format_number(e)))
+
+    image_file_name = ""
+    image_dir = "static/images/"
+
+    if input_size < 3:
+        # we create a list of possible characters that form the file names
+        _possible_chars = string.ascii_letters + string.digits
+        # we can draw an image if there are 1 or 2 arguments
+        _image_file_name_len = 10
+        # create a file name, that is not present in the directory
+        image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
+        while os.path.isfile(image_file_name):
+            image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
+
+        if input_size == 1:
+            fig = plt.figure()
+            X = np.arange(-1, max_values[0] + 1, 0.1)
+            Y = []
+            for x in X:
+                Y.append(interpolating([x])[0][0])
+            plt.plot(X, Y)
+            plt.savefig(image_file_name)
+        else:
+            fig = plt.figure()
+            ax = fig.gca(projection="3d")
+            X = np.arange(-1, max_values[0] + 1, 0.1)
+            Y = np.arange(-1, max_values[1] + 1, 0.1)
+            X, Y = np.meshgrid(X, Y)
+            Z = []
+            for x in X[0]:
+                current = []
+                for y in Y:
+                    current.append(interpolating([x, y[0]])[0][0])
+                Z.append(current)
+            surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
+                                   linewidth=0.1, antialiased=True,
+                                   shade=True, cmap=cm.jet)
+            plt.savefig(image_file_name)
+
+    # return the derivatives, evaluations, and image file name
+    return derivatives, evaluations, image_file_name.replace(image_dir, "")
 
 def _format_number(num):
     # a function that formats a number as string with two digits after dot
@@ -280,7 +382,10 @@ def _format_number(num):
 
 def get_derivatives(function, req_evaluations):
     # the function which calls the interior function of this file
-    derivatives, evaluations, image_file_name = _mathematica_derivatives(function, req_evaluations)
+    derivatives, evaluations, image_file_name = _scipy_derivatives(function, req_evaluations)
+
+    # depracated function which does the derivative processing in mathematica
+    # derivatives, evaluations, image_file_name = _mathematica_derivatives(function, req_evaluations)
 
     if derivatives:
         # if derivatives exist, then return success

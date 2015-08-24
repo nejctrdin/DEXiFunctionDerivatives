@@ -89,12 +89,17 @@ class TestDexi(unittest.TestCase):
 
         derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
         self.assertEqual(derivatives, ["1.00"] * 4);
-        self.assertEqual(evals, [(["1"], "1.0"), (["2"], "2.0"), (["3"], "3.0")])
+        self.assertEqual(evals, [(["1"], "1.00"), (["2"], "2.00"), (["3"], "3.00")])
         self.assertNotEqual(image, "")
         self.assertRegexpMatches(image, "[A-Za-z0-9]+.png")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
-        os.remove("".join(["static/images/", image]))
+
+        file_path = "".join(["static/images/", image])
+        exit = os.path.exists(file_path)
+        self.assertEqual(exit, 1)
+
+        os.remove(file_path)
 
     def test_medium(self):
         # medium test case
@@ -108,12 +113,17 @@ class TestDexi(unittest.TestCase):
 
         derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
         self.assertEqual(derivatives, ["1.00"] * 20);
-        self.assertEqual(evals, [(["1", "1"], "2.0"), (["2", "2"], "4.0"), (["3", "3.5"], "6.5")])
+        self.assertEqual(evals, [(["1", "1"], "2.00"), (["2", "2"], "4.00"), (["3", "3.5"], "6.50")])
         self.assertNotEqual(image, "")
         self.assertRegexpMatches(image, "[A-Za-z0-9]+.png")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
-        os.remove("".join(["static/images/", image]))
+
+        file_path = "".join(["static/images/", image])
+        exit = os.path.exists(file_path)
+        self.assertEqual(exit, 1)
+
+        os.remove(file_path)
 
     def test_large(self):
         # large test case
@@ -130,17 +140,17 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(message, "")
 
         derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
-        self.assertEqual(derivatives, ["0.00", "0.50", "-4.00", "2.50", "-4.00", "0.00", "0.50", "-2.00", "-2.50",
-                                       "-2.00", "-0.50", "0.00", "-0.50", "0.00", "2.00", "1.50", "0.00", "-1.50",
-                                       "-4.00", "-1.50", "4.00", "-3.50", "4.00", "4.00", "2.50", "2.00", "-0.50",
-                                       "-0.11", "-4.50", "0.00", "-6.50", "-1.50", "0.00", "0.50", "1.50", "0.00",
-                                       "7.50", "-1.50", "-3.50", "-0.50", "-0.50", "-0.50", "0.50", "0.50", "2.50",
-                                       "1.50", "-2.00", "1.50", "3.00", "2.00", "0.50", "-1.00", "6.00", "-0.50",
-                                       "-5.00", "0.00", "-3.50", "-0.50", "2.50", "2.50", "-0.50", "-3.50", "0.50",
-                                       "1.50", "2.50", "-1.00", "-1.00", "-1.00", "-3.50", "-0.50", "2.50", "-2.00",
-                                       "0.00", "2.00", "0.50", "1.50", "2.50", "2.00", "2.00", "2.00", "-2.50",
-                                       "-1.50", "-0.50", "0.11"])
-        self.assertEqual(evals, [(["1", "2", "3"], "5.0"), (["0.1", "0.2", "0.3"], "2.73124")])
+        self.assertEqual(derivatives, ["-1.00", "0.00", "-2.00", "1.00", "-2.00", "1.00", "1.00", "-1.00", "-2.00",
+                                       "-2.00", "-0.50", "-0.00", "-0.50", "-0.00", "2.00", "1.50", "-0.00", "-1.50",
+                                       "-3.00", "-1.00", "2.00", "-2.00", "2.00", "3.00", "2.00", "1.00", "-1.00",
+                                       "-0.11", "-3.00", "0.00", "-3.00", "-1.50", "0.00", "0.50", "0.00", "0.00",
+                                       "4.00", "-1.00", "-2.00", "0.00", "-0.50", "-0.50", "0.50", "0.00", "1.00",
+                                       "1.00", "0.00", "1.00", "1.00", "2.00", "0.50", "-1.00", "4.00", "0.00",
+                                       "-3.00", "0.00", "-2.00", "-0.50", "1.00", "1.00", "-0.50", "-2.00", "1.00",
+                                       "1.50", "2.00", "-1.00", "-1.00", "-1.00", "-2.00", "-0.50", "1.00", "-1.00",
+                                       "-0.00", "1.00", "1.00", "1.50", "2.00", "2.00", "2.00", "2.00", "-2.00",
+                                       "-1.50", "-1.00", "0.11"])
+        self.assertEqual(evals, [(["1", "2", "3"], "3.00"), (["0.1", "0.2", "0.3"], "2.93")])
         self.assertEqual(image, "")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
