@@ -7,12 +7,12 @@ Any subsequent lines are interpreted as additional inputs to the constructed fun
 
 Functions with one or two arguments are also displayed while evaluating!
 
-The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *mathematica*, and the derivatives are also computed based on the interpolated function.
+The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *scipy*, and the derivatives are also computed based on the interpolated function. Previously, the interpolation and computation of derivatives was done using *mathematica* - the functions are still in place.
 
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.
 
 ## Prerequisites
-To run the server you need <a href="http://flask.pocoo.org/">flask</a> and <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
+To run the server you need <a href="http://flask.pocoo.org/">flask</a> and at least <a href="http://www.scipy.org/">scipy 0.14</a>. If you wish to use the mathematica backend, you need <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
 
 ## Usage
 

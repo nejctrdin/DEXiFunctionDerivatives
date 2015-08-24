@@ -25,7 +25,7 @@ _ABOUT = ("This is an application which enables the users to input a DEXi type f
           "Any subsequent lines are interpreted as additional inputs to the constructed function, which can also be floats! These points are evaluated against the constructed interpolating function.\n"
           "Functions with one or two arguments are also displayed while evaluating!\n"
           "For exact syntax check the examples above.\n"
-          "The app was developed using <a href=\"http://flask.pocoo.org/\">flask</a> for serving and GUI (integrating python scripts) and <a href=\"http://www.wolfram.com/mathematica/\">mathematica</a> is used in the backend for constructing the interpolating functions (using splines) and evaluating the constructed functions.\n"
+          "The app was developed using <a href=\"http://flask.pocoo.org/\">flask</a> for serving and GUI (integrating python scripts) and scipy is used in the backend for constructing the interpolating functions (using splines) and evaluating the constructed functions. Previously, this was done using <a href=\"http://www.wolfram.com/mathematica/\">mathematica</a> and the functions is still in place. \n"
           "You can check the code and possibly contribute at <a href=\"https://github.com/nejctrdin/DEXiFunctionDerivatives\">github</a>.")
 
 # examples put onto the page
