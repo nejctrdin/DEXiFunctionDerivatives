@@ -5,5 +5,5 @@ python:
 install:
     - pip install numpy
     - pip install matplotlib
-    - easy_install scipy
+    - pip install svn+http://svn.scipy.org/svn/scipy/trunk/#egg=scipy
 script: python dexiTest.py
