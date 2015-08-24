@@ -17,4 +17,8 @@ before_install:
     - sudo apt-get install libblas-dev
     - sudo apt-get install liblapack-dev
     - sudo apt-get install gfortran
-    - sudo apt-get install -qq python-numpy python-scipy
+    - wget http://sourceforge.net/projects/scipy/files/scipy/0.14.0/scipy-0.14.0.tar.gz
+    - tar zxvf scipy-0.14.0.tar.gz
+    - cd scipy-0.14.0
+    - python setup.py build
+    - python setup.py install
