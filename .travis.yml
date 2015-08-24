@@ -4,10 +4,12 @@ python:
   - "2.6"
   - "2.7"
 
+virtualenv:
+    system_site_packages: true
+
 install:
     - pip install numpy
     - pip install matplotlib
-    - pip install scipy
 
 script: python dexiTest.py
 
@@ -15,3 +17,4 @@ before_install:
     - sudo apt-get install libblas-dev
     - sudo apt-get install liblapack-dev
     - sudo apt-get install gfortran
+    - sudo apt-get install -qq python-numpy python-scipy
