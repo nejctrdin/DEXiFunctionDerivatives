@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from itertools import product
-from subprocess import check_output
+#from subprocess import check_output
 from scipy.misc import derivative
 import random
 import string
