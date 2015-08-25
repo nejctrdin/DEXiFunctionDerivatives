@@ -351,7 +351,7 @@ def _scipy_derivatives(function, req_evaluations, output_image=True):
 
     # create the filename for the possible image
     image_file_name = ""
-    image_dir = "/home/nejctrdin/static/images/"
+    image_dir = "/home/nejctrdin/DFD/static/images/"
 
     if input_size < 3:
         # we create a list of possible characters that form the file names
