@@ -1,5 +1,5 @@
 # the title of the app
-_TITLE = "DEXi Function to Derivatives"
+_TITLE = "DEXi Function to Derivatives - DEVELOPMENT"
 
 # the subtitle appearing in the banner
 _SUBTITLE = "This is a web-service which enables the users to input a DEXi type function (rule-based), and receive back the values of the first (partial) derivatives in the defined points. It also allows for evaluation of other non-integer points in the domain of the function and plotting the functions with less than three arguments."
