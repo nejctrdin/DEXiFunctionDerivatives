@@ -157,14 +157,20 @@ class TestDexi(unittest.TestCase):
 
     def test_error_2argument(self):
         # test if construction of a two argument function produces the expected errors
-        self.assertRaisesRegexp(
-                ValueError,
-                "Multiplicity of the first attribute must be more than 0.",
-                dexi.create_2argument_function, -1, 5, None)
-        self.assertRaisesRegexp(
-                ValueError,
-                "Multiplicity of the second attribute must be more than 0.",
-                dexi.create_2argument_function, 2, -1, None)
+        try:
+            dexi.create_2argument_function(-1, 5, None)
+        except ValueError, message:
+            self.failUnlessEqual(message.args[0], "Multiplicity of the first attribute must be more than 0.")
+        else:
+            self.fail("ValueError not raised")
+
+        try:
+            dexi.create_2argument_function(2, -1, None)
+        except ValueError, message:
+            self.failUnlessEqual(message.args[0], "Multiplicity of the second attribute must be more than 0.")
+        else:
+            self.fail("ValueError not raised")
+
         self.assertRaises(TypeError, dexi.create_2argument_function, 1, 5, None)
 
         self.assertRaises(TypeError, dexi.create_2argument_function, 1, 5, lambda x: x)
