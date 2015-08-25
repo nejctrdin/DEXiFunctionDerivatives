@@ -17,6 +17,6 @@ before_install:
     - wget http://sourceforge.net/projects/scipy/files/scipy/0.14.0/scipy-0.14.0.tar.gz
     - tar zxvf scipy-0.14.0.tar.gz
     - cd scipy-0.14.0
-    - python setup.py build
+    - python setup.py build > /dev/null
     - python setup.py install
     - cd ..
