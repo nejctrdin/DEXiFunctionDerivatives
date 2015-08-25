@@ -120,18 +120,3 @@ def derivatives():
 
     # the derivatives page is rendered
     return render_template("derivatives.html", entries=entries)
-
-
-if __name__ == "__main__":
-    _HOST = "0.0.0.0"
-    # parse arguments
-    if len(argv) == 2:
-        # if license must be displayed
-        if argv[1] == "license":
-            print content._GPL
-        else:
-            # otherwise treat the argument as port number
-            app.run(host=_HOST, port=int(argv[1]))
-    else:
-        # otherwise just run the app on the app-decided port
-        app.run(host=_HOST)
