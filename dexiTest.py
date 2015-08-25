@@ -87,19 +87,13 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
         self.assertEqual(derivatives, ["1.00"] * 4);
         self.assertEqual(evals, [(["1"], "1.00"), (["2"], "2.00"), (["3"], "3.00")])
         self.assertNotEqual(image, "")
         self.assertRegexpMatches(image, "[A-Za-z0-9]+.png")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
-
-        file_path = "".join(["static/images/", image])
-        exit = os.path.exists(file_path)
-        self.assertEqual(exit, 1)
-
-        os.remove(file_path)
 
     def test_medium(self):
         # medium test case
@@ -111,19 +105,13 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
         self.assertEqual(derivatives, ["1.00"] * 20);
         self.assertEqual(evals, [(["1", "1"], "2.00"), (["2", "2"], "4.00"), (["3", "3.5"], "6.50")])
         self.assertNotEqual(image, "")
         self.assertRegexpMatches(image, "[A-Za-z0-9]+.png")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
-
-        file_path = "".join(["static/images/", image])
-        exit = os.path.exists(file_path)
-        self.assertEqual(exit, 1)
-
-        os.remove(file_path)
 
     def test_large(self):
         # large test case
