@@ -381,10 +381,12 @@ def _scipy_derivatives(function, req_evaluations, output_image=True):
             Y = np.arange(-1, max_values[1] + 1, 0.1)
             X, Y = np.meshgrid(X, Y)
             Z = []
-            for x in X[0]:
+            for i in xrange(len(X)):
                 current = []
-                for y in Y:
-                    current.append(interpolating([x, y[0]])[0][0])
+                for j in xrange(len(X[i])):
+                    x = X[i][j]
+                    y = Y[i][j]
+                    current.append(interpolating([x, y])[0][0])
                 Z.append(current)
             surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                                    linewidth=0.1, antialiased=True,
