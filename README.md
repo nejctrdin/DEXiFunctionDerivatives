@@ -11,6 +11,9 @@ The application uses *flask* to serve the web pages and does the needed preproce
 
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.
 
+## Build Status
+[![Build Status](https://travis-ci.org/nejctrdin/DFD.svg)](https://travis-ci.org/nejctrdin/DFD)
+
 ## Prerequisites
 To run the server you need <a href="http://flask.pocoo.org/">flask</a> and at least <a href="http://www.scipy.org/">scipy 0.14</a>. If you wish to use the mathematica backend, you need <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
 
