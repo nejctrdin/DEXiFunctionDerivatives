@@ -1,6 +1,7 @@
 import unittest
 import dexi
 import os
+import string
 
 class TestDexi(unittest.TestCase):
 
@@ -14,6 +15,7 @@ class TestDexi(unittest.TestCase):
     _SMALL_TEST = "012\nf\n3\n1\n2\n3"
     _MEDIUM_TEST = "012123234\nf,s\n3,3\n1,1\n2,2\n3,3.5"
     _LARGE_TEST = "423120124321201212013024421\nf,s,t\n3,3,3\n1,2,3\n0.1,0.2,0.3"
+    _POSSIBLE_CHARS = string.ascii_letters + string.digits
 
     def test_empty(self):
         # test if empty function produces errors
@@ -90,8 +92,12 @@ class TestDexi(unittest.TestCase):
         derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
         self.assertEqual(derivatives, ["1.00"] * 4);
         self.assertEqual(evals, [(["1"], "1.00"), (["2"], "2.00"), (["3"], "3.00")])
+
         self.assertNotEqual(image, "")
-        self.assertRegexpMatches(image, "[A-Za-z0-9]+.png")
+        self.assertEqual(image[-4:], ".png")
+        for c in image[:-4]:
+            self.assertTrue(c in self._POSSIBLE_CHARS)
+
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
@@ -109,7 +115,11 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(derivatives, ["1.00"] * 20);
         self.assertEqual(evals, [(["1", "1"], "2.00"), (["2", "2"], "4.00"), (["3", "3.5"], "6.50")])
         self.assertNotEqual(image, "")
-        self.assertRegexpMatches(image, "[A-Za-z0-9]+.png")
+
+        self.assertEqual(image[-4:], ".png")
+        for c in image[:-4]:
+            self.assertTrue(c in self._POSSIBLE_CHARS)
+
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
