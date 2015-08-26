@@ -291,6 +291,8 @@ class ServerTest(unittest.TestCase):
 
     def setUp(self):
         self.app = server.app.test_client()
+        server.app.config["TESTING"] = True
+        server.app.config["DEBUG"] = True
 
     def test_root(self):
         result = self.app.get("/")
