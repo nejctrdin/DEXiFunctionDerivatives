@@ -15,8 +15,6 @@ before_install:
 # Install packages
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib 
-  # Coverage packages are on my binstar channel
-  - python setup.py install
 
 script:
   - python dexiTest.py
