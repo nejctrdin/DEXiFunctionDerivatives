@@ -92,7 +92,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
         self.assertEqual(derivatives, ["1.00"] * 4);
         self.assertEqual(evals, [(["1"], "1.00"), (["2"], "2.00"), (["3"], "3.00")])
 
