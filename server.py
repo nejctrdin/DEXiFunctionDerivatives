@@ -98,7 +98,7 @@ def derivatives():
         # evaluations and the possible image
         names = ",".join(arguments)
         multiplicities = raw_function[2]
-        derivatives, evaluations, image, success1, message1 = get_derivatives(function, evaluations)
+        derivatives, evaluations, image, success1, message1 = get_derivatives(function, evaluations, arguments)
         print "Query needed {0}s to execute!".format(_format_number(time() - t))
 
     # form a dictionary to return to the user
