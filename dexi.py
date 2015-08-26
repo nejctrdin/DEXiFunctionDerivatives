@@ -413,14 +413,7 @@ def get_derivatives(function, req_evaluations, output_image=True):
     # depracated function which does the derivative processing in mathematica
     # derivatives, evaluations, image_file_name = _mathematica_derivatives(function, req_evaluations)
 
-    if derivatives:
-        # if derivatives exist, then return success
-        return derivatives, evaluations, image_file_name, True, ""
-
-    # otherwise create empty lists and return
-    derivatives = [0] * (len(function) * len(function[0][0]))
-    evaluations = [0] * len(req_evaluations)
-    return derivatives, evaluations, "", False, PROBLEM_DERIVATIVES
+    return derivatives, evaluations, image_file_name, True, ""
 
 def create_2argument_function(mul_f, mul_s, function):
     # function creates a by-point-defined function of 2 arguments with
