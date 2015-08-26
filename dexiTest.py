@@ -2,6 +2,7 @@ import unittest
 import dexi
 import os
 import string
+import content
 
 class TestDexi(unittest.TestCase):
 
@@ -223,6 +224,64 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(formatted, "1.56")
 
         self.assertRaises(ValueError, dexi._format_number, "foo")
+
+    def test_content(self):
+        self.assertIn("DEVELOPMENT", content._TITLE)
+        self.assertIn("DEX", content._TITLE)
+        self.assertIn("General Public License", content._GPL)
+        self.assertNotEqual(content._ABOUT, "")
+        self.assertNotEqual(content._SUBTITLE, "")
+
+    def test_content_examples(self):
+        for description, example in content._EXAMPLES:
+            inp_line = example.replace(" ", "\n")
+            self.assertNotEqual(description, "")
+
+            function, arguments, evaluations, success, message = dexi.parse_function(inp_line)
+
+            self.assertNotEqual(function, [])
+            for point, output in function:
+                for arg in point:
+                    self.assertTrue(type(arg) is int)
+                self.assertTrue(type(output) is float)
+
+            self.assertNotEqual(arguments, [])
+            for arg in arguments:
+                self.assertNotEqual(arg, "")
+
+            if evaluations:
+                for evaluation in evaluations:
+                    for point in evaluation:
+                        self.assertTrue(type(point) is str)
+                        self.assertTrue(type(float(point)) is float)
+            self.assertEqual(success, True)
+            self.assertEqual(message, "")
+
+            derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
+
+            self.assertEqual(len(derivatives), (len(function) + 1)*len(arguments))
+
+            for derivative in derivatives:
+                self.assertTrue(type(derivative) is str)
+                self.assertTrue(type(float(derivative)) is float)
+
+            if evaluations:
+                self.assertNotEqual(evals, [])
+                for point, evaluation in evals:
+                    self.assertEqual(len(point), len(arguments))
+                    for p in point:
+                        self.assertTrue(type(p) is str)
+                        self.assertTrue(type(float(p)) is float)
+                    self.assertTrue(type(evaluation) is str)
+                    self.assertTrue(type(float(evaluation)) is float)
+
+            if len(arguments) < 3:
+                self.assertRegexpMatches(image, "[a-zA-Z0-9]{10}\.png")
+            else:
+                self.assertEqual(image, "")
+
+            self.assertEqual(success, True)
+            self.assertEqual(message, "")
 
 if __name__ == "__main__":
     unittest.main()
