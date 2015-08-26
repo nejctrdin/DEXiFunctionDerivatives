@@ -17,6 +17,7 @@ install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib
   - pip install coveralls
   - pip install coverage
+  - pip install flask
 
 script:
   - coverage run dexiTest.py
