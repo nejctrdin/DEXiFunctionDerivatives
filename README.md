@@ -13,6 +13,7 @@ You can check the code and possibly contribute at <a href="https://github.com/ne
 
 ## Build Status
 [![Build Status](https://travis-ci.org/nejctrdin/DFD.svg?branch=master)](https://travis-ci.org/nejctrdin/DFD)
+[![Coverage Status](https://coveralls.io/repos/nejctrdin/DFD/badge.svg?branch=master&service=github)](https://coveralls.io/github/nejctrdin/DFD?branch=master)
 
 ## Prerequisites
 To run the server you need <a href="http://flask.pocoo.org/">flask</a> and at least <a href="http://www.scipy.org/">scipy 0.14</a>. If you wish to use the mathematica backend, you need <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
