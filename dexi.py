@@ -200,7 +200,7 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
         if input_size == 1:
             # if input size is 1, we have a 2D image
             fig = plt.figure()
-            X = np.arange(-1, max_values[0] + 1, 0.1)
+            X = np.arange(-1, max_values[0] + 1.1, 0.1)
             ax = fig.add_subplot(111)
             ax.set_xlabel(arguments[0])
             ax.set_ylabel("Output")
@@ -215,8 +215,8 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             # otherwise we have a 3D image
             fig = plt.figure()
             ax = fig.gca(projection="3d")
-            X = np.arange(-1, max_values[0] + 1, 0.1)
-            Y = np.arange(-1, max_values[1] + 1, 0.1)
+            X = np.arange(-1, max_values[0] + 1.1, 0.1)
+            Y = np.arange(-1, max_values[1] + 1.1, 0.1)
             X, Y = np.meshgrid(X, Y)
             ax.set_xlabel(arguments[0])
             ax.set_ylabel(arguments[1])
