@@ -220,6 +220,17 @@ class TestDexi(unittest.TestCase):
         func = dexi.create_2argument_function(2, 2, lambda x,y: x * y)
         self.assertEqual(func, "0,0,0,1 first,second 2,2")
 
+    def test_formatting(self):
+        formatted = dexi._format_number(1.5)
+        self.assertEqual(formatted, "1.50")
+
+        formatted = dexi._format_number(2)
+        self.assertEqual(formatted, "2.00")
+
+        formatted = dexi._format_number(1.55555)
+        self.assertEqual(formatted, "1.56")
+
+        self.assertRaises(ValueError, dexi._format_number, "foo")
 
 if __name__ == "__main__":
     unittest.main()
