@@ -193,9 +193,12 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
         # we can draw an image if there are 1 or 2 arguments
         _image_file_name_len = 10
         # create a file name, that is not present in the directory
-        image_file_name = "dexi.py"
-        while os.path.isfile(image_file_name):
+        image_file_name = ""
+
+        while True:
             image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
+            if not os.path.isfile(image_file_name):
+                break
 
         if input_size == 1:
             # if input size is 1, we have a 2D image
