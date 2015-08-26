@@ -114,7 +114,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
         self.assertEqual(derivatives, ["1.00"] * 20);
         self.assertEqual(evals, [(["1", "1"], "2.00"), (["2", "2"], "4.00"), (["3", "3.5"], "6.50")])
         self.assertNotEqual(image, "")
@@ -140,7 +140,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments)
         self.assertEqual(derivatives, ["-1.00", "0.00", "-2.00", "1.00", "-2.00", "1.00", "1.00", "-1.00", "-2.00",
                                        "-2.00", "-0.50", "-0.00", "-0.50", "-0.00", "2.00", "1.50", "-0.00", "-1.50",
                                        "-3.00", "-1.00", "2.00", "-2.00", "2.00", "3.00", "2.00", "1.00", "-1.00",
@@ -170,7 +170,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments)
         self.assertEqual(derivatives, ["-1.00", "0.00", "-2.00", "1.00", "-2.00", "1.00", "1.00", "-1.00", "-2.00",
                                        "-2.00", "-0.50", "-0.00", "-0.50", "-0.00", "2.00", "1.50", "-0.00", "-1.50",
                                        "-3.00", "-1.00", "2.00", "-2.00", "2.00", "3.00", "2.00", "1.00", "-1.00",
@@ -258,7 +258,7 @@ class TestDexi(unittest.TestCase):
             self.assertEqual(success, True)
             self.assertEqual(message, "")
 
-            derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, False)
+            derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
 
             self.assertEqual(len(derivatives), (len(function) + 1)*len(arguments))
 

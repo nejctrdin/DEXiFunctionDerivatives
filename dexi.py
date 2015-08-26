@@ -116,7 +116,7 @@ def parse_function(f_rep):
     # return the function, arguments, requested evaluations, status and message
     return function, arguments, req_evaluations, True, ""
 
-def _scipy_derivatives(function, req_evaluations, output_image=True):
+def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function expects a correct form of a function as parsed above and evaluation points
     # then it constructs an interpolating function using scipy interpolate utility, parses the
     # results and returns them
@@ -212,8 +212,11 @@ def _scipy_derivatives(function, req_evaluations, output_image=True):
             # otherwise we have a 3D image
             fig = plt.figure()
             ax = fig.gca(projection="3d")
-            X = np.arange(-1, max_values[0] + 1, 0.1)
-            Y = np.arange(-1, max_values[1] + 1, 0.1)
+            X = np.arange(-1, max_values[0] + 1.1, 0.1)
+            Y = np.arange(-1, max_values[1] + 1.1, 0.1)
+            ax.set_xlabel(arguments[0])
+            ax.set_ylabel(arguments[1])
+            ax.set_zlabel("Output")
             X, Y = np.meshgrid(X, Y)
             Z = []
             for i in xrange(len(X)):
@@ -236,9 +239,9 @@ def _format_number(num):
     # a function that formats a number as string with two digits after dot
     return "{0:.2f}".format(num)
 
-def get_derivatives(function, req_evaluations, output_image=True):
+def get_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function which calls the interior function of this file
-    derivatives, evaluations, image_file_name = _scipy_derivatives(function, req_evaluations, output_image)
+    derivatives, evaluations, image_file_name = _scipy_derivatives(function, req_evaluations, arguments, output_image)
 
     return derivatives, evaluations, image_file_name, True, ""
 
