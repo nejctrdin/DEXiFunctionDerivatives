@@ -217,6 +217,7 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             ax.set_xlabel(arguments[0])
             ax.set_ylabel(arguments[1])
             ax.set_zlabel("Output")
+            ax.view_init(azim=-160)
             X, Y = np.meshgrid(X, Y)
             Z = []
             for i in xrange(len(X)):
