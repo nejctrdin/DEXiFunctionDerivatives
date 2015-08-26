@@ -202,6 +202,9 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             # if input size is 1, we have a 2D image
             fig = plt.figure()
             X = np.arange(-1, max_values[0] + 1, 0.1)
+            ax = fig.add_subplot(111)
+            ax.set_xlabel(arguments[0])
+            ax.set_ylabel("Output")
             Y = []
             for x in X:
                 Y.append(interpolating([x])[0][0])
