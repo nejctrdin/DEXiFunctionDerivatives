@@ -462,7 +462,7 @@ class ServerTest(unittest.TestCase):
                 self.assertIn(line, data)
 
             self.assertIn("<h1>Tabelaric Function</h1>", data)
-            if len(function.split("\n")[1]) < 3:
+            if len(function.split("\n")[1].split(",")) < 3:
                 self.assertIn("<h1>Function Image</h1>", data)
             self.assertIn("<h1>Derivatives</h1>", data)
             self.assertIn("<th>Average</th>", data)
