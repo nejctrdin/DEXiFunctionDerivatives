@@ -7,7 +7,7 @@ Any subsequent lines are interpreted as additional inputs to the constructed fun
 
 Functions with one or two arguments are also displayed while evaluating!
 
-The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *scipy*, and the derivatives are also computed based on the interpolated function. Previously, the interpolation and computation of derivatives was done using *mathematica* - the functions are still in place.
+The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *scipy*, and the derivatives are also computed based on the interpolated function. Previously, the interpolation and computation of derivatives was done using *mathematica* - these were removed in commit 0d2427a24f78228fbaf59efb1ead765aa7654672.
 
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.
 
