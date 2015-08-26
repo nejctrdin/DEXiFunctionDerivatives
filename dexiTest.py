@@ -15,6 +15,7 @@ class TestDexi(unittest.TestCase):
     _SMALL_TEST = "012\nf\n3\n1\n2\n3"
     _MEDIUM_TEST = "012123234\nf,s\n3,3\n1,1\n2,2\n3,3.5"
     _LARGE_TEST = "423120124321201212013024421\nf,s,t\n3,3,3\n1,2,3\n0.1,0.2,0.3"
+    _LARGE_TEST_NEWLINE = "423120124321201212013024421\n\n\nf,s,t\n\n3,3,3\n\n1,2,3\n\n0.1,0.2,0.3"
     _POSSIBLE_CHARS = string.ascii_letters + string.digits
 
     def test_empty(self):
@@ -126,6 +127,36 @@ class TestDexi(unittest.TestCase):
     def test_large(self):
         # large test case
         function, arguments, evaluations, success, message = dexi.parse_function(self._LARGE_TEST)
+        self.assertEqual(function, [[(0, 0, 0), 4], [(0, 0, 1), 2], [(0, 0, 2), 3], [(0, 1, 0), 1], [(0, 1, 1), 2],
+                                    [(0, 1, 2), 0], [(0, 2, 0), 1], [(0, 2, 1), 2], [(0, 2, 2), 4], [(1, 0, 0), 3],
+                                    [(1, 0, 1), 2], [(1, 0, 2), 1], [(1, 1, 0), 2], [(1, 1, 1), 0], [(1, 1, 2), 1],
+                                    [(1, 2, 0), 2], [(1, 2, 1), 1], [(1, 2, 2), 2], [(2, 0, 0), 0], [(2, 0, 1), 1],
+                                    [(2, 0, 2), 3], [(2, 1, 0), 0], [(2, 1, 1), 2], [(2, 1, 2), 4], [(2, 2, 0), 4],
+                                    [(2, 2, 1), 2], [(2, 2, 2), 1]])
+        self.assertEqual(arguments, ["f", "s", "t"])
+        self.assertEqual(evaluations, [["1", "2", "3"], ["0.1", "0.2", "0.3"]])
+        self.assertEqual(success, True)
+        self.assertEqual(message, "")
+
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations)
+        self.assertEqual(derivatives, ["-1.00", "0.00", "-2.00", "1.00", "-2.00", "1.00", "1.00", "-1.00", "-2.00",
+                                       "-2.00", "-0.50", "-0.00", "-0.50", "-0.00", "2.00", "1.50", "-0.00", "-1.50",
+                                       "-3.00", "-1.00", "2.00", "-2.00", "2.00", "3.00", "2.00", "1.00", "-1.00",
+                                       "-0.11", "-3.00", "0.00", "-3.00", "-1.50", "0.00", "0.50", "0.00", "0.00",
+                                       "4.00", "-1.00", "-2.00", "0.00", "-0.50", "-0.50", "0.50", "0.00", "1.00",
+                                       "1.00", "0.00", "1.00", "1.00", "2.00", "0.50", "-1.00", "4.00", "0.00",
+                                       "-3.00", "0.00", "-2.00", "-0.50", "1.00", "1.00", "-0.50", "-2.00", "1.00",
+                                       "1.50", "2.00", "-1.00", "-1.00", "-1.00", "-2.00", "-0.50", "1.00", "-1.00",
+                                       "-0.00", "1.00", "1.00", "1.50", "2.00", "2.00", "2.00", "2.00", "-2.00",
+                                       "-1.50", "-1.00", "0.11"])
+        self.assertEqual(evals, [(["1", "2", "3"], "3.00"), (["0.1", "0.2", "0.3"], "2.93")])
+        self.assertEqual(image, "")
+        self.assertEqual(success, True)
+        self.assertEqual(message, "")
+
+    def test_large(self):
+        # large test case with newlines
+        function, arguments, evaluations, success, message = dexi.parse_function(self._LARGE_TEST_NEWLINE)
         self.assertEqual(function, [[(0, 0, 0), 4], [(0, 0, 1), 2], [(0, 0, 2), 3], [(0, 1, 0), 1], [(0, 1, 1), 2],
                                     [(0, 1, 2), 0], [(0, 2, 0), 1], [(0, 2, 1), 2], [(0, 2, 2), 4], [(1, 0, 0), 3],
                                     [(1, 0, 1), 2], [(1, 0, 2), 1], [(1, 1, 0), 2], [(1, 1, 1), 0], [(1, 1, 2), 1],

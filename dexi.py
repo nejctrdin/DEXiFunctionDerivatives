@@ -29,7 +29,12 @@ def parse_function(f_rep):
 
     # removing the \r chars and splitting the function by new lines
     f_rep = f_rep.replace("\r", "")
-    split = f_rep.split("\n")
+    lines = f_rep.split("\n")
+
+    split = []
+    for line in lines:
+        if line != "":
+            split.append(line)
     
     if len(split) < 3:
         # function must be at least three lines long
