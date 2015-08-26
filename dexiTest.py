@@ -3,6 +3,7 @@ import dexi
 import os
 import string
 import content
+import server
 
 class TestDexi(unittest.TestCase):
 
@@ -282,6 +283,193 @@ class TestDexi(unittest.TestCase):
 
             self.assertEqual(success, True)
             self.assertEqual(message, "")
+
+
+class ServerTest(unittest.TestCase):
+    
+    _QUERY_SMALL = "123\nf\n3"
+
+    def setUp(self):
+        self.app = server.app.test_client()
+        server.app.config["TESTING"] = True
+        server.app.config["DEBUG"] = True
+        dexi.DEFAULT_IMAGE_PATH = ""
+
+    def test_root(self):
+        result = self.app.get("/")
+        self.assertEqual(result.status, "200 OK")
+        data = result.data
+
+        for line in content._TITLE.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._SUBTITLE.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._GPL.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._ABOUT.split("\n"):
+            self.assertIn(line, data)
+
+        for description, example in content._EXAMPLES:
+            self.assertIn(description, data)
+            for line in example.split(" "):
+                self.assertIn(line, data)
+
+    def test_nonexistent(self):
+        result = self.app.get("/foo")
+        self.assertEqual(result.status, "404 NOT FOUND")
+        
+        result = self.app.get("/bar")
+        self.assertEqual(result.status, "404 NOT FOUND")
+        
+        result = self.app.get("/123")
+        self.assertEqual(result.status, "404 NOT FOUND")
+
+    def test_not_allowed(self):
+        result = self.app.get("/get_derivatives")
+        self.assertEqual(result.status, "405 METHOD NOT ALLOWED")
+
+    def test_incorrect_input(self):
+        result = self.app.post("/get_derivatives")
+        self.assertIn("Could not parse input! Unsupported operation!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Function should be represented in at least 3 lines!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123\n\n"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Function should be represented in at least 3 lines!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123\n1,2,3\n"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Function should be represented in at least 3 lines!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123\nf,s\n2"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Number of function arguments (2) and number of multiplicities (1) should be equal!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123\nf,s\n2,3"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! The input space size (6) does not match output space size (3)!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "1234567\nf,s\n2,3"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! The input space size (6) does not match output space size (7)!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "12345,60\nf,s\n2,3"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! The input space size (6) does not match output space size (2)!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123456\nf,s\n2,3\n1,2,3"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Number of function arguments (2) does not match number of supplied evaluation arguments (3)", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123456\nf,s\n2,3\n1"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Number of function arguments (2) does not match number of supplied evaluation arguments (1)", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+        query = {"function": "123456\nf,s\n2,3.5"}
+        result = self.app.post("/get_derivatives", data=query)
+        self.assertIn("Could not parse input! Multiplicities should be integers! Muliplicity 2 is not!", result.data)
+        self.assertEqual(result.status, "200 OK")
+
+    def test_derivatives_small_custom(self):
+        query = {"function": self._QUERY_SMALL}
+        
+        result = self.app.post("/get_derivatives", data=query)
+        data = result.data
+
+        self.assertEqual(result.status, "200 OK")
+
+        for line in content._TITLE.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._SUBTITLE.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._GPL.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._ABOUT.split("\n"):
+            self.assertIn(line, data)
+
+        self.assertIn("<h1>Tabelaric Function</h1>", data)
+        self.assertIn("<h1>Function Image</h1>", data)
+        self.assertIn("<h1>Derivatives</h1>", data)
+        self.assertIn("<th>Average</th>", data)
+
+    def test_derivatives_small_dynamic(self):
+        query = {"names": "f,s",
+                 "multiplicity": "2,2",
+                 "v0": 0,
+                 "v1": 1,
+                 "v2": 2,
+                 "v3": 3}
+        
+        result = self.app.post("/get_derivatives", data=query)
+        data = result.data
+
+        self.assertEqual(result.status, "200 OK")
+
+        for line in content._TITLE.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._SUBTITLE.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._GPL.split("\n"):
+            self.assertIn(line, data)
+
+        for line in content._ABOUT.split("\n"):
+            self.assertIn(line, data)
+
+        self.assertIn("<h1>Tabelaric Function</h1>", data)
+        self.assertIn("<h1>Function Image</h1>", data)
+        self.assertIn("<h1>Derivatives</h1>", data)
+        self.assertIn("<th>Average</th>", data)
+
+    def test_derivatives_content_examples(self):
+        for _, example in content._EXAMPLES:
+            function = example.replace(" ", "\n")
+            query = {"function": function}
+
+            result = self.app.post("/get_derivatives", data=query)
+            data = result.data
+
+            for line in content._TITLE.split("\n"):
+                self.assertIn(line, data)
+
+            for line in content._SUBTITLE.split("\n"):
+                self.assertIn(line, data)
+
+            for line in content._GPL.split("\n"):
+                self.assertIn(line, data)
+
+            for line in content._ABOUT.split("\n"):
+                self.assertIn(line, data)
+
+            self.assertIn("<h1>Tabelaric Function</h1>", data)
+            if len(function.split("\n")[1]) < 3:
+                self.assertIn("<h1>Function Image</h1>", data)
+            self.assertIn("<h1>Derivatives</h1>", data)
+            self.assertIn("<th>Average</th>", data)
+
+            if len(function.split("\n")) > 3:
+                self.assertIn("<h1>Function Evaluations</h1>", data)
+
 
 if __name__ == "__main__":
     unittest.main()

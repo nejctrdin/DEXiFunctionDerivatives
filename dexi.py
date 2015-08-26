@@ -24,6 +24,8 @@ FUNCTION_EVALUATIONS_FLOAT = "All function evaluations should be floats {0}!"
 PROBLEM_DERIVATIVES = "There was a problem constructing derivatives!"
 NOT_CORRECT_ARGUMENTS_EVAL = "Number of function arguments ({0}) does not match number of supplied evaluation arguments ({1}) - {2}."
 
+DEFAULT_IMAGE_PATH = "/home/nejctrdin/DFD/static/images/"
+
 def parse_function(f_rep):
     # the function that parses the input string
 
@@ -183,7 +185,7 @@ def _scipy_derivatives(function, req_evaluations, output_image=True):
 
     # create the filename for the possible image
     image_file_name = ""
-    image_dir = "/home/nejctrdin/DFD/static/images/"
+    image_dir = DEFAULT_IMAGE_PATH
 
     if input_size < 3:
         # we create a list of possible characters that form the file names
