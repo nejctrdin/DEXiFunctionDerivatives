@@ -293,7 +293,7 @@ class ServerTest(unittest.TestCase):
         self.app = server.app.test_client()
         server.app.config["TESTING"] = True
         server.app.config["DEBUG"] = True
-        dexi.DEFAULT_IMAGE_PATH = ""
+        content._DEFAULT_IMAGE_PATH = ""
 
     def test_root(self):
         result = self.app.get("/")
