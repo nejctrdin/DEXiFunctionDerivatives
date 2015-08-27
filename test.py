@@ -293,7 +293,7 @@ class ServerTest(unittest.TestCase):
         self.app = server.app.test_client()
         server.app.config["TESTING"] = True
         server.app.config["DEBUG"] = True
-        dexi.DEFAULT_IMAGE_PATH = ""
+        content._DEFAULT_IMAGE_PATH = ""
 
     def test_root(self):
         result = self.app.get("/")
@@ -406,9 +406,8 @@ class ServerTest(unittest.TestCase):
         for line in content._ABOUT.split("\n"):
             self.assertIn(line, data)
 
-        self.assertIn("<h1>Tabelaric Function</h1>", data)
+        self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
         self.assertIn("<h1>Function Image</h1>", data)
-        self.assertIn("<h1>Derivatives</h1>", data)
         self.assertIn("<th>Average</th>", data)
 
     def test_derivatives_small_dynamic(self):
@@ -436,9 +435,8 @@ class ServerTest(unittest.TestCase):
         for line in content._ABOUT.split("\n"):
             self.assertIn(line, data)
 
-        self.assertIn("<h1>Tabelaric Function</h1>", data)
+        self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
         self.assertIn("<h1>Function Image</h1>", data)
-        self.assertIn("<h1>Derivatives</h1>", data)
         self.assertIn("<th>Average</th>", data)
 
     def test_derivatives_content_examples(self):
@@ -461,10 +459,9 @@ class ServerTest(unittest.TestCase):
             for line in content._ABOUT.split("\n"):
                 self.assertIn(line, data)
 
-            self.assertIn("<h1>Tabelaric Function</h1>", data)
+            self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
             if len(function.split("\n")[1].split(",")) < 3:
                 self.assertIn("<h1>Function Image</h1>", data)
-            self.assertIn("<h1>Derivatives</h1>", data)
             self.assertIn("<th>Average</th>", data)
 
             if len(function.split("\n")) > 3:

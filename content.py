@@ -46,3 +46,6 @@ _EXAMPLE12 = ("first*second - second", "0,-1,-2,-3,-4,0,0,0,0,0,0,1,2,3,4,0,2,4,
 # the joined examples
 _EXAMPLES = [_EXAMPLE1, _EXAMPLE2, _EXAMPLE3, _EXAMPLE4, _EXAMPLE5, _EXAMPLE6,
              _EXAMPLE7, _EXAMPLE8, _EXAMPLE9, _EXAMPLE10, _EXAMPLE11, _EXAMPLE12]
+
+# image path
+_DEFAULT_IMAGE_PATH = "/home/nejctrdin/DFD/static/images/"

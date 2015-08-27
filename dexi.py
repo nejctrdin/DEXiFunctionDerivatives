@@ -11,6 +11,7 @@ from scipy.misc import derivative
 import random
 import string
 import os
+import content
 
 # different error statuses given back to the user in case of problems
 NOT_CORRECT_LINES = "Function should be represented in at least 3 lines!"
@@ -23,8 +24,6 @@ FUNCTION_OUTPUT_FLOAT = "All function outputs should be floats!"
 FUNCTION_EVALUATIONS_FLOAT = "All function evaluations should be floats {0}!"
 PROBLEM_DERIVATIVES = "There was a problem constructing derivatives!"
 NOT_CORRECT_ARGUMENTS_EVAL = "Number of function arguments ({0}) does not match number of supplied evaluation arguments ({1}) - {2}."
-
-DEFAULT_IMAGE_PATH = "/home/nejctrdin/DFD/static/images/"
 
 def parse_function(f_rep):
     # the function that parses the input string
@@ -185,7 +184,7 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
 
     # create the filename for the possible image
     image_file_name = ""
-    image_dir = DEFAULT_IMAGE_PATH
+    image_dir = content._DEFAULT_IMAGE_PATH
 
     if input_size < 3:
         # we create a list of possible characters that form the file names
@@ -207,7 +206,6 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             ax = fig.add_subplot(111)
             ax.set_xlabel(arguments[0])
             ax.set_ylabel("Output")
-
             Y = []
             for x in X:
                 Y.append(interpolating([x])[0][0])
@@ -218,13 +216,13 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             # otherwise we have a 3D image
             fig = plt.figure()
             ax = fig.gca(projection="3d")
-            X = np.arange(-1, max_values[0] + 1.1, 0.1)
-            Y = np.arange(-1, max_values[1] + 1.1, 0.1)
-            X, Y = np.meshgrid(X, Y)
+            X = np.arange(-0.5, max_values[0] + 0.6, 0.1)
+            Y = np.arange(-0.5, max_values[1] + 0.6, 0.1)
             ax.set_xlabel(arguments[0])
             ax.set_ylabel(arguments[1])
             ax.set_zlabel("Output")
             ax.view_init(azim=-160)
+            X, Y = np.meshgrid(X, Y)
             Z = []
             for i in xrange(len(X)):
                 current = []
@@ -249,9 +247,6 @@ def _format_number(num):
 def get_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function which calls the interior function of this file
     derivatives, evaluations, image_file_name = _scipy_derivatives(function, req_evaluations, arguments, output_image)
-
-    # depracated function which does the derivative processing in mathematica
-    # derivatives, evaluations, image_file_name = _mathematica_derivatives(function, req_evaluations)
 
     return derivatives, evaluations, image_file_name, True, ""
 
