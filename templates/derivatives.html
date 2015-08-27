@@ -17,7 +17,7 @@
             </div>
             {% if entries.ok %}
                 <div class="page-header">
-                    <h1>Tabelaric Function</h1>
+                    <h1>Tabelaric Function and Derivatives</h1>
                 </div>
                 <form action="{{ url_for('derivatives') }}" method=post>
                     <div class="row">
@@ -30,18 +30,39 @@
                                             <th>{{ name }}</th>
                                         {% endfor %}
                                         <th>Output</th>
+                                        {% for name in entries.arguments %}
+                                            <th>d({{ name }})</th>
+                                        {% endfor %}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for point in entries.function %}
                                         <tr>
-                                                <th>{{ loop.index }}</th>
+                                            <th>{{ loop.index }}</th>
+
                                             {% for p in point[0] %}
                                                 <td>{{ p }}</td>
                                             {% endfor %}
+
                                             <td><input type="text" name="v{{ loop.index0 }}" value={{ point[1]}}></td>
+
+                                            {% set tmp_counter = loop.index0 %}
+                                            {% set function_size = loop.length + 1 %}
+                                            {% for name in entries.arguments %}
+                                                <td>{{ entries.derivatives[tmp_counter + loop.index0*function_size] }}</td>
+                                            {% endfor %}
                                         </tr>
                                     {% endfor %}
+                                        <tr>
+                                            <th>Average</th>
+                                            {% for name in entries.arguments %}
+                                                <td></td>
+                                            {% endfor %}
+                                            <td></td>
+                                            {% for name in entries.arguments %}
+                                                <td>{{ entries.derivatives[loop.index0*((entries.function|length) + 1) + (entries.function|length)] }}</td>
+                                            {% endfor %}
+                                        </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -66,35 +87,6 @@
                         <div class="col-md-2"></div>
                     </div>
                 {% endif %}
-                <div class="page-header">
-                    <h1>Derivatives</h1>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    {% for point in entries.function %}
-                                        <th>{{ (point[0]|string).replace(" ","") }}</th>
-                                    {% endfor %}
-                                    <th>Average</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for name in entries.arguments %}
-                                    <tr>
-                                        {% set tmp_counter = loop.index0 %}
-                                        <td>{{ name }}</td>
-                                        {% for _ in entries.function + [1] %}
-                                            <td>{{ entries.derivatives[loop.index0 + loop.length*tmp_counter] }}</td>
-                                        {% endfor %}
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
                 {% if entries.evaluations %}
                     <div class="page-header">
                         <h1>Function Evaluations</h1>

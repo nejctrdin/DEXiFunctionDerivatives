@@ -134,4 +134,4 @@ if __name__ == "__main__":
             app.run(host=_HOST, port=int(argv[1]))
     else:
         # otherwise just run the app on the app-decided port
-        app.run(host=_HOST)
+        app.run(host=_HOST, debug=True)
