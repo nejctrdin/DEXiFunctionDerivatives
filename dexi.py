@@ -248,7 +248,7 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             # output animation
             if output_image:
                 anim = animation.FuncAnimation(fig, animate, frames=24)
-                anim.save(anim_file_name, writer="imagemagick", fps=4)
+                anim.save(anim_file_name, writer="imagemagick", fps=8)
 
             # output image
             ax.view_init(azim=-160)
