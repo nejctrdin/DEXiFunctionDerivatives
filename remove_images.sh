@@ -6,6 +6,7 @@ for f in $(find static/images/ -name "*.png"); do
     if [ $diff -gt 86400 ]
     then
         rm $f
+        echo "Removing file $f"
     fi
 done
 
