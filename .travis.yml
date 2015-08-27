@@ -18,6 +18,7 @@ install:
   - pip install coveralls
   - pip install coverage
   - pip install flask
+  - sudo apt-get install imagemagick
 
 script:
   - coverage run test.py

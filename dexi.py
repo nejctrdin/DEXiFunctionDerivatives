@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from itertools import product
-#from subprocess import check_output
 from scipy.misc import derivative
+from matplotlib import animation
 import random
 import string
 import os
@@ -184,6 +184,7 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
 
     # create the filename for the possible image
     image_file_name = ""
+    anim_file_name = ""
     image_dir = content._DEFAULT_IMAGE_PATH
 
     if input_size < 3:
@@ -221,7 +222,6 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             ax.set_xlabel(arguments[0])
             ax.set_ylabel(arguments[1])
             ax.set_zlabel("Output")
-            ax.view_init(azim=-160)
             X, Y = np.meshgrid(X, Y)
             Z = []
             for i in xrange(len(X)):
@@ -234,11 +234,29 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                                    linewidth=0.1, antialiased=True,
                                    shade=True, cmap=cm.jet)
+            # prepare the animation
+            def animate(nFrame):
+                ax.view_init(azim=-160+15*nFrame)
+
+            anim_file_name = ""
+
+            while True:
+                anim_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".gif"])
+                if not os.path.isfile(anim_file_name):
+                    break
+
+            # output animation
+            if output_image:
+                anim = animation.FuncAnimation(fig, animate, frames=24)
+                anim.save(anim_file_name, writer="imagemagick", fps=4)
+
+            # output image
+            ax.view_init(azim=-160)
             if output_image:
                 plt.savefig(image_file_name)
 
     # return the derivatives, evaluations, and image file name
-    return derivatives, evaluations, image_file_name.replace(image_dir, "")
+    return derivatives, evaluations, image_file_name.replace(image_dir, ""), anim_file_name.replace(image_dir, "")
 
 def _format_number(num):
     # a function that formats a number as string with two digits after dot
@@ -246,9 +264,9 @@ def _format_number(num):
 
 def get_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function which calls the interior function of this file
-    derivatives, evaluations, image_file_name = _scipy_derivatives(function, req_evaluations, arguments, output_image)
+    derivatives, evaluations, image_file_name, anim_file_name = _scipy_derivatives(function, req_evaluations, arguments, output_image)
 
-    return derivatives, evaluations, image_file_name, True, ""
+    return derivatives, evaluations, image_file_name, anim_file_name, True, ""
 
 def create_2argument_function(mul_f, mul_s, function):
     # function creates a by-point-defined function of 2 arguments with

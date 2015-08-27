@@ -93,12 +93,13 @@ def derivatives():
     multiplicities = ""
     names = ""
     image = ""
+    animation = ""
     if success:
         # if the previous step succeeded we can construct the function, get derivatives,
         # evaluations and the possible image
         names = ",".join(arguments)
         multiplicities = raw_function[2]
-        derivatives, evaluations, image, success1, message1 = get_derivatives(function, evaluations, arguments)
+        derivatives, evaluations, image, animation, success1, message1 = get_derivatives(function, evaluations, arguments)
         print "Query needed {0}s to execute!".format(_format_number(time() - t))
 
     # form a dictionary to return to the user
@@ -115,7 +116,8 @@ def derivatives():
                "names": names,
                "multiplicities": multiplicities,
                "evaluations": evaluations,
-               "image": image
+               "image": image,
+               "animation": animation
     }
 
     # the derivatives page is rendered
@@ -134,4 +136,4 @@ if __name__ == "__main__":
             app.run(host=_HOST, port=int(argv[1]))
     else:
         # otherwise just run the app on the app-decided port
-        app.run(host=_HOST, debug=True)
+        app.run(host=_HOST)
