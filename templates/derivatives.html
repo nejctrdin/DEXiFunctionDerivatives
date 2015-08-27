@@ -75,10 +75,11 @@
                             <input type=submit value=Submit>
                         </div>
                 </form>
-                {% if entries.image %}
+                {% if entries.image or entries.animation %}
                     <div class="page-header">
                         <h1>Function Image</h1>
                     </div>
+                    {% if entries.image %}
                     <div class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
@@ -86,6 +87,16 @@
                         </div>
                         <div class="col-md-2"></div>
                     </div>
+                    {% endif %}
+                    {% if entries.animation %}
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <img src="static/images/{{ entries.animation }}" alt="Function Animation">
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    {% endif %}
                 {% endif %}
                 {% if entries.evaluations %}
                     <div class="page-header">
