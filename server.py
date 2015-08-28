@@ -4,6 +4,7 @@ from flask import render_template
 from dexi import parse_function
 from dexi import get_derivatives
 from dexi import _format_number
+from dexi import _create_animation
 from time import time
 import content
 from sys import argv
@@ -11,6 +12,9 @@ from sys import argv
 app = Flask(__name__)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
+
+_MISSING_ARGUMENTS = "Cannot create function animation. Missing arguments in request."
+_COULD_NOT_PARSE_FUNCTION = "Could not parse function! {0}"
 
 @app.route("/")
 def index():
@@ -121,6 +125,59 @@ def derivatives():
     # the derivatives page is rendered
     return render_template("derivatives.html", entries=entries)
 
+@app.route("/get_animation", methods=["POST"])
+def animation():
+    raw_function = ""
+    if "names" in request.form:
+        # if "names" is in the request, it means it was called from the already
+        # created derivatives - the user changed the inputs and retried the
+        # derivative creation
+        values = {}
+        # we read the fields in the request and parse out those that start with a v
+        for field in request.form:
+            if field[0] == "v":
+                # the values and the entries are put into a dictionary
+                # before that the keys have "v"s removed and cast to int
+                tmp_f = int(field.replace("v",""))
+                values[tmp_f] = request.form[field]
+
+        value_list = []
+        # we sort the keys of the dictionary, to get the initial order
+        # and put the values into a value list
+        for field in sorted(values):
+            value_list.append(values[field])
+
+        # function is described in three lines
+        function_description = []
+        # output values joined, delimited with a comma
+        function_description.append(",".join(value_list))
+        # names are delimited by a comma (already in the request)
+        function_description.append(request.form["names"])
+        # multiplicities are delimited by a comma (already in the request)
+        function_description.append(request.form["multiplicity"])
+
+        # the raw function is represented as a new-line delimitied string
+        raw_function = str("\n".join(function_description))
+
+    else:
+        return _MISSING_ARGUMENTS
+
+    # we are interested in the time that took for generating the animation
+    t = time()
+    # we parse the function, getting the actual function, arguments, needed evaluations
+    # success status and possible message
+    function, arguments, evaluations, success, message = parse_function(raw_function)
+
+    if success:
+        # if the previous step succeeded we can construct the function, get derivatives,
+        # evaluations and the possible image
+        anim_file_name = _create_animation(function, arguments)
+        print "Function animation needed {0}s to execute!".format(_format_number(time() - t))
+    else:
+        return _COULD_NOT_PARSE_FUNCTION.format(message)
+
+    # the derivatives page is rendered
+    return anim_file_name 
 
 if __name__ == "__main__":
     _HOST = "0.0.0.0"

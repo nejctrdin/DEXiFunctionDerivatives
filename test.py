@@ -332,6 +332,9 @@ class ServerTest(unittest.TestCase):
         result = self.app.get("/get_derivatives")
         self.assertEqual(result.status, "405 METHOD NOT ALLOWED")
 
+        result = self.app.get("/get_animation")
+        self.assertEqual(result.status, "405 METHOD NOT ALLOWED")
+
     def test_incorrect_input(self):
         result = self.app.post("/get_derivatives")
         self.assertIn("Could not parse input! Unsupported operation!", result.data)
@@ -452,6 +455,39 @@ class ServerTest(unittest.TestCase):
         self.assertTrue(os.path.isfile(png_file))
         os.remove(png_file)
 
+    def test_animation(self):
+        query = {"names": "f,s",
+                 "multiplicity": "2,2",
+                 "v0": 0,
+                 "v1": 1,
+                 "v2": 2,
+                 "v3": 3}
+        
+        result = self.app.post("/get_animation", data=query)
+        data = result.data
+
+        self.assertEqual(result.status, "200 OK")
+        self.assertRegexpMatches(data, "[A-Za-z0-9]{10}\.gif")
+        self.assertTrue(os.path.isfile(data))
+        os.remove(data)
+
+    def test_animation_error(self):
+        query = {}
+        result = self.app.post("/get_animation", data=query)
+        self.assertEqual(result.status, "200 OK")
+        data = result.data
+        self.assertEqual(data, "Cannot create function animation. Missing arguments in request.")
+
+        query = {"names": "f,s",
+                 "multiplicity": "2,2",
+                 "v0": 0,
+                 "v1": 1,
+                 "v2": 2}
+        result = self.app.post("/get_animation", data=query)
+        self.assertEqual(result.status, "200 OK")
+        data = result.data
+        self.assertEqual(data, "Could not parse function! The input space size (4) does not match output space size (3)!")
+
     def test_derivatives_content_examples(self):
         for _, example in content._EXAMPLES:
             function = example.replace(" ", "\n")
@@ -459,6 +495,7 @@ class ServerTest(unittest.TestCase):
 
             result = self.app.post("/get_derivatives", data=query)
             data = result.data
+            self.assertEqual(result.status, "200 OK")
 
             for line in content._TITLE.split("\n"):
                 self.assertIn(line, data)
