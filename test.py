@@ -4,6 +4,7 @@ import os
 import string
 import content
 import server
+import re
 
 class TestDexi(unittest.TestCase):
 
@@ -422,6 +423,11 @@ class ServerTest(unittest.TestCase):
         self.assertIn("<h1>Function Image</h1>", data)
         self.assertIn("<th>Average</th>", data)
 
+        m = re.search("[A-Za-z0-9]{10}\.png", data)
+        png_file = m.group(0)
+        self.assertTrue(os.path.isfile(png_file))
+        os.remove(png_file)
+
     def test_derivatives_small_dynamic(self):
         query = {"names": "f,s",
                  "multiplicity": "2,2",
@@ -451,6 +457,16 @@ class ServerTest(unittest.TestCase):
         self.assertIn("<h1>Function Image</h1>", data)
         self.assertIn("<th>Average</th>", data)
 
+        m = re.search("[A-Za-z0-9]{10}\.png", data)
+        png_file = m.group(0)
+        self.assertTrue(os.path.isfile(png_file))
+        os.remove(png_file)
+
+        m = re.search("[A-Za-z0-9]{10}\.gif", data)
+        anim_file = m.group(0)
+        self.assertTrue(os.path.isfile(anim_file))
+        os.remove(anim_file)
+
     def test_derivatives_content_examples(self):
         for _, example in content._EXAMPLES:
             function = example.replace(" ", "\n")
@@ -474,6 +490,17 @@ class ServerTest(unittest.TestCase):
             self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
             if len(function.split("\n")[1].split(",")) < 3:
                 self.assertIn("<h1>Function Image</h1>", data)
+                m = re.search("[A-Za-z0-9]{10}\.png", data)
+                png_file = m.group(0)
+                self.assertTrue(os.path.isfile(png_file))
+                os.remove(png_file)
+
+                if len(function.split("\n")[1].split(",")) == 2:
+                    m = re.search("[A-Za-z0-9]{10}\.gif", data)
+                    anim_file = m.group(0)
+                    self.assertTrue(os.path.isfile(anim_file))
+                    os.remove(anim_file)
+
             self.assertIn("<th>Average</th>", data)
 
             if len(function.split("\n")) > 3:

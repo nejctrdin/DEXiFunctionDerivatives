@@ -203,7 +203,6 @@ def _create_image(interpolating, input_size, max_values, arguments, output_image
         def animate(nFrame):
             ax.view_init(azim=-160+15*nFrame)
 
-
         while True:
             anim_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".gif"])
             if not os.path.isfile(anim_file_name):
@@ -220,7 +219,6 @@ def _create_image(interpolating, input_size, max_values, arguments, output_image
             plt.savefig(image_file_name)
 
     return image_file_name.replace(image_dir, ""), anim_file_name.replace(image_dir, "")
-
 
 def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function expects a correct form of a function as parsed above and evaluation points
