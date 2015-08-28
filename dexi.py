@@ -115,11 +115,7 @@ def parse_function(f_rep):
     # return the function, arguments, requested evaluations, status and message
     return function, arguments, req_evaluations, True, ""
 
-def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
-    # the function expects a correct form of a function as parsed above and evaluation points
-    # then it constructs an interpolating function using scipy interpolate utility, parses the
-    # results and returns them
-
+def _create_function(function):
     # input size (number of arguments) and number of points
     input_size = len(function[0][0])
     # size of the function
@@ -151,6 +147,87 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
             bounds_error=False,
             fill_value=None
     )
+
+    return interpolating, max_values, input_size
+
+def _create_image(interpolating, input_size, max_values, arguments, output_image):
+    # we create a list of possible characters that form the file names
+    _possible_chars = string.ascii_letters + string.digits
+    # we can draw an image if there are 1 or 2 arguments
+    _image_file_name_len = 10
+    # create a file name, that is not present in the directory
+    image_file_name = ""
+    image_dir = content._DEFAULT_IMAGE_PATH
+    anim_file_name = ""
+
+    while True:
+        image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
+        if not os.path.isfile(image_file_name):
+            break
+
+    if input_size == 1:
+        # if input size is 1, we have a 2D image
+        fig = plt.figure()
+        X = np.arange(-1, max_values[0] + 1.1, 0.1)
+        ax = fig.add_subplot(111)
+        ax.set_xlabel(arguments[0])
+        ax.set_ylabel("Output")
+        Y = []
+        for x in X:
+            Y.append(interpolating([x])[0][0])
+        plt.plot(X, Y)
+        if output_image:
+            plt.savefig(image_file_name)
+    else:
+        # otherwise we have a 3D image
+        fig = plt.figure()
+        ax = fig.gca(projection="3d")
+        X = np.arange(-0.5, max_values[0] + 0.6, 0.1)
+        Y = np.arange(-0.5, max_values[1] + 0.6, 0.1)
+        ax.set_xlabel(arguments[0])
+        ax.set_ylabel(arguments[1])
+        ax.set_zlabel("Output")
+        X, Y = np.meshgrid(X, Y)
+        Z = []
+        for i in xrange(len(X)):
+            current = []
+            for j in xrange(len(X[i])):
+                x = X[i][j]
+                y = Y[i][j]
+                current.append(interpolating([x, y])[0][0])
+            Z.append(current)
+        surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
+                               linewidth=0.1, antialiased=True,
+                               shade=True, cmap=cm.jet)
+        # prepare the animation
+        def animate(nFrame):
+            ax.view_init(azim=-160+15*nFrame)
+
+
+        while True:
+            anim_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".gif"])
+            if not os.path.isfile(anim_file_name):
+                break
+
+        # output animation
+        if output_image:
+            anim = animation.FuncAnimation(fig, animate, frames=24)
+            anim.save(anim_file_name, writer="imagemagick", fps=8)
+
+        # output image
+        if output_image:
+            ax.view_init(azim=-160)
+            plt.savefig(image_file_name)
+
+    return image_file_name.replace(image_dir, ""), anim_file_name.replace(image_dir, "")
+
+
+def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
+    # the function expects a correct form of a function as parsed above and evaluation points
+    # then it constructs an interpolating function using scipy interpolate utility, parses the
+    # results and returns them
+
+    interpolating, max_values, input_size = _create_function(function)
 
     # an inline function for computing partial derivatives
     def partial_derivative(func, var=0, point=[]):
@@ -185,78 +262,15 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
     # create the filename for the possible image
     image_file_name = ""
     anim_file_name = ""
-    image_dir = content._DEFAULT_IMAGE_PATH
-
     if input_size < 3:
-        # we create a list of possible characters that form the file names
-        _possible_chars = string.ascii_letters + string.digits
-        # we can draw an image if there are 1 or 2 arguments
-        _image_file_name_len = 10
-        # create a file name, that is not present in the directory
-        image_file_name = ""
-
-        while True:
-            image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
-            if not os.path.isfile(image_file_name):
-                break
-
-        if input_size == 1:
-            # if input size is 1, we have a 2D image
-            fig = plt.figure()
-            X = np.arange(-1, max_values[0] + 1.1, 0.1)
-            ax = fig.add_subplot(111)
-            ax.set_xlabel(arguments[0])
-            ax.set_ylabel("Output")
-            Y = []
-            for x in X:
-                Y.append(interpolating([x])[0][0])
-            plt.plot(X, Y)
-            if output_image:
-                plt.savefig(image_file_name)
-        else:
-            # otherwise we have a 3D image
-            fig = plt.figure()
-            ax = fig.gca(projection="3d")
-            X = np.arange(-0.5, max_values[0] + 0.6, 0.1)
-            Y = np.arange(-0.5, max_values[1] + 0.6, 0.1)
-            ax.set_xlabel(arguments[0])
-            ax.set_ylabel(arguments[1])
-            ax.set_zlabel("Output")
-            X, Y = np.meshgrid(X, Y)
-            Z = []
-            for i in xrange(len(X)):
-                current = []
-                for j in xrange(len(X[i])):
-                    x = X[i][j]
-                    y = Y[i][j]
-                    current.append(interpolating([x, y])[0][0])
-                Z.append(current)
-            surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
-                                   linewidth=0.1, antialiased=True,
-                                   shade=True, cmap=cm.jet)
-            # prepare the animation
-            def animate(nFrame):
-                ax.view_init(azim=-160+15*nFrame)
-
-            anim_file_name = ""
-
-            while True:
-                anim_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".gif"])
-                if not os.path.isfile(anim_file_name):
-                    break
-
-            # output animation
-            if output_image:
-                anim = animation.FuncAnimation(fig, animate, frames=24)
-                anim.save(anim_file_name, writer="imagemagick", fps=8)
-
-            # output image
-            ax.view_init(azim=-160)
-            if output_image:
-                plt.savefig(image_file_name)
+       image_file_name, anim_file_name = _create_image(interpolating,
+                                                       input_size,
+                                                       max_values,
+                                                       arguments,
+                                                       output_image)
 
     # return the derivatives, evaluations, and image file name
-    return derivatives, evaluations, image_file_name.replace(image_dir, ""), anim_file_name.replace(image_dir, "")
+    return derivatives, evaluations, image_file_name, anim_file_name
 
 def _format_number(num):
     # a function that formats a number as string with two digits after dot
