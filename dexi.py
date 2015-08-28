@@ -150,7 +150,7 @@ def _create_function(function):
 
     return interpolating, max_values, input_size
 
-def _create_image(interpolating, input_size, max_values, arguments, output_image):
+def _create_image(interpolating, max_values, arguments, output_image):
     # we create a list of possible characters that form the file names
     _possible_chars = string.ascii_letters + string.digits
     # we can draw an image if there are 1 or 2 arguments
@@ -158,7 +158,7 @@ def _create_image(interpolating, input_size, max_values, arguments, output_image
     # create a file name, that is not present in the directory
     image_file_name = ""
     image_dir = content._DEFAULT_IMAGE_PATH
-    anim_file_name = ""
+    input_size = len(arguments)
 
     while True:
         image_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".png"])
@@ -178,7 +178,7 @@ def _create_image(interpolating, input_size, max_values, arguments, output_image
         plt.plot(X, Y)
         if output_image:
             plt.savefig(image_file_name)
-    else:
+    elif input_size == 2:
         # otherwise we have a 3D image
         fig = plt.figure()
         ax = fig.gca(projection="3d")
@@ -187,6 +187,7 @@ def _create_image(interpolating, input_size, max_values, arguments, output_image
         ax.set_xlabel(arguments[0])
         ax.set_ylabel(arguments[1])
         ax.set_zlabel("Output")
+        ax.view_init(azim=-160)
         X, Y = np.meshgrid(X, Y)
         Z = []
         for i in xrange(len(X)):
@@ -199,26 +200,60 @@ def _create_image(interpolating, input_size, max_values, arguments, output_image
         surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
                                linewidth=0.1, antialiased=True,
                                shade=True, cmap=cm.jet)
-        # prepare the animation
-        def animate(nFrame):
-            ax.view_init(azim=-160+15*nFrame)
-
-        while True:
-            anim_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".gif"])
-            if not os.path.isfile(anim_file_name):
-                break
-
-        # output animation
-        if output_image:
-            anim = animation.FuncAnimation(fig, animate, frames=24)
-            anim.save(anim_file_name, writer="imagemagick", fps=8)
 
         # output image
         if output_image:
-            ax.view_init(azim=-160)
             plt.savefig(image_file_name)
 
-    return image_file_name.replace(image_dir, ""), anim_file_name.replace(image_dir, "")
+    return image_file_name.replace(image_dir, "")
+
+def _create_animation(function, arguments):
+    if len(arguments) != 2:
+        return ""
+
+    interpolating, max_values, input_size = _create_function(function)
+    # we create a list of possible characters that form the file names
+    _possible_chars = string.ascii_letters + string.digits
+    # we can draw an image if there are 1 or 2 arguments
+    _image_file_name_len = 10
+    # create a file name, that is not present in the directory
+    image_dir = content._DEFAULT_IMAGE_PATH
+    anim_file_name = ""
+
+    # otherwise we have a 3D image
+    fig = plt.figure()
+    ax = fig.gca(projection="3d")
+    X = np.arange(-0.5, max_values[0] + 0.6, 0.1)
+    Y = np.arange(-0.5, max_values[1] + 0.6, 0.1)
+    ax.set_xlabel(arguments[0])
+    ax.set_ylabel(arguments[1])
+    ax.set_zlabel("Output")
+    X, Y = np.meshgrid(X, Y)
+    Z = []
+    for i in xrange(len(X)):
+        current = []
+        for j in xrange(len(X[i])):
+            x = X[i][j]
+            y = Y[i][j]
+            current.append(interpolating([x, y])[0][0])
+        Z.append(current)
+    surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1,
+                           linewidth=0.1, antialiased=True,
+                           shade=True, cmap=cm.jet)
+    # prepare the animation
+    def animate(nFrame):
+        ax.view_init(azim=-160+15*nFrame)
+
+    while True:
+        anim_file_name = "".join([image_dir] + [random.choice(_possible_chars) for _ in xrange(_image_file_name_len)] + [".gif"])
+        if not os.path.isfile(anim_file_name):
+            break
+
+    # output animation
+    anim = animation.FuncAnimation(fig, animate, frames=24)
+    anim.save(anim_file_name, writer="imagemagick", fps=8)
+
+    return anim_file_name.replace(image_dir, "")
 
 def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function expects a correct form of a function as parsed above and evaluation points
@@ -259,16 +294,14 @@ def _scipy_derivatives(function, req_evaluations, arguments, output_image=True):
 
     # create the filename for the possible image
     image_file_name = ""
-    anim_file_name = ""
     if input_size < 3:
-       image_file_name, anim_file_name = _create_image(interpolating,
-                                                       input_size,
-                                                       max_values,
-                                                       arguments,
-                                                       output_image)
+       image_file_name  = _create_image(interpolating,
+                                        max_values,
+                                        arguments,
+                                        output_image)
 
     # return the derivatives, evaluations, and image file name
-    return derivatives, evaluations, image_file_name, anim_file_name
+    return derivatives, evaluations, image_file_name
 
 def _format_number(num):
     # a function that formats a number as string with two digits after dot
@@ -276,9 +309,9 @@ def _format_number(num):
 
 def get_derivatives(function, req_evaluations, arguments, output_image=True):
     # the function which calls the interior function of this file
-    derivatives, evaluations, image_file_name, anim_file_name = _scipy_derivatives(function, req_evaluations, arguments, output_image)
+    derivatives, evaluations, image_file_name = _scipy_derivatives(function, req_evaluations, arguments, output_image)
 
-    return derivatives, evaluations, image_file_name, anim_file_name, True, ""
+    return derivatives, evaluations, image_file_name, True, ""
 
 def create_2argument_function(mul_f, mul_s, function):
     # function creates a by-point-defined function of 2 arguments with
