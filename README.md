@@ -7,7 +7,7 @@ Any subsequent lines are interpreted as additional inputs to the constructed fun
 
 Functions with one or two arguments are also displayed while evaluating!
 
-The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *scipy*, and the derivatives are also computed based on the interpolated function. Previously, the interpolation and computation of derivatives was done using *mathematica* - these were removed in commit 17f8e21006463275279b4f4490a6d86ea702043a.
+The application uses *flask* to serve the web pages and does the needed preprocessing of the inputs. The derivatives of the supplied functions are interpolated with splines, using *scipy*, and the derivatives are also computed based on the interpolated function. Gif images are created using *Imagemagick*. Previously, the interpolation and computation of derivatives was done using *mathematica* - these were removed in commit 17f8e21006463275279b4f4490a6d86ea702043a.
 
 You can check the code and possibly contribute at <a href="https://github.com/nejctrdin/DEXiFunctionDerivatives">github</a>.
 
@@ -16,7 +16,7 @@ You can check the code and possibly contribute at <a href="https://github.com/ne
 [![Coverage Status](https://coveralls.io/repos/nejctrdin/DFD/badge.svg?branch=develop&service=github)](https://coveralls.io/github/nejctrdin/DFD?branch=develop)
 
 ## Prerequisites
-To run the server you need <a href="http://flask.pocoo.org/">flask</a> and at least <a href="http://www.scipy.org/">scipy 0.14</a>. If you wish to use the mathematica backend, you need <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
+To run the server you need <a href="http://flask.pocoo.org/">flask</a> and at least <a href="http://www.scipy.org/">scipy 0.14</a>. For creating *gif* images, you need <a href="http://www.imagemagick.org/script/index.php">Imagemagick</a>. If you wish to use the mathematica backend, you need <a href="http://www.wolfram.com/mathematica/">mathematica</a> installed (specifically, `math` must be in your path).
 
 ## Usage
 
