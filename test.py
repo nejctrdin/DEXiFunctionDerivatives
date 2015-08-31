@@ -187,6 +187,24 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
+    def test_animation(self):
+        anim_file_name = dexi._create_animation("", [])
+        self.assertEqual(anim_file_name, "")
+
+        anim_file_name = dexi._create_animation("", ["f"])
+        self.assertEqual(anim_file_name, "")
+
+        anim_file_name = dexi._create_animation("", ["f", "s", "t"])
+        self.assertEqual(anim_file_name, "")
+
+        content._DEFAULT_IMAGE_PATH = ""
+        function = [[(0, 0), 0], [(0, 1), 1], [(1, 0), 1], [(1, 1), 2]]
+        anim_file_name = dexi._create_animation(function, ["f", "s"])
+
+        self.assertRegexpMatches(anim_file_name, "[a-zA-Z0-9]{10}\.gif")
+        self.assertTrue(os.path.isfile(anim_file_name))
+        os.remove(anim_file_name)
+
     def test_error_2argument(self):
         # test if construction of a two argument function produces the expected errors
         self.assertRaisesRegexp(ValueError, "Multiplicity of the first attribute must be more than 0.",
