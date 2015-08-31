@@ -8,73 +8,77 @@
             <div class="page-header">
                 <h1>Input</h1>
             </div>
-            <div class="well">
-                <p style="word-wrap: break-word;">
-                    {% for line in entries.raw_function %}
-                        {{ line }}<br>
-                    {% endfor %}
-                </p>
+            <div class="row">
+                <div class="well">
+                    <p style="word-wrap: break-word;">
+                        {% for line in entries.raw_function %}
+                            {{ line }}<br>
+                        {% endfor %}
+                    </p>
+                </div>
             </div>
             {% if entries.ok %}
                 <div class="page-header">
                     <h1>Tabelaric Function and Derivatives</h1>
                 </div>
-                <form action="{{ url_for('derivatives') }}" method=post>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Row#</th>
-                                        {% for name in entries.arguments %}
-                                            <th>{{ name }}</th>
-                                        {% endfor %}
-                                        <th>Output</th>
-                                        {% for name in entries.arguments %}
-                                            <th>d({{ name }})</th>
-                                        {% endfor %}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for point in entries.function %}
+                <div class="row">
+                    <form action="{{ url_for('derivatives') }}" method=post>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped">
+                                    <thead>
                                         <tr>
-                                            <th>{{ loop.index }}</th>
-
-                                            {% for p in point[0] %}
-                                                <td>{{ p }}</td>
-                                            {% endfor %}
-
-                                            <td><input type="text" name="v{{ loop.index0 }}" value={{ point[1]}}></td>
-
-                                            {% set tmp_counter = loop.index0 %}
-                                            {% set function_size = loop.length + 1 %}
+                                            <th>Row#</th>
                                             {% for name in entries.arguments %}
-                                                <td>{{ entries.derivatives[tmp_counter + loop.index0*function_size] }}</td>
+                                                <th>{{ name }}</th>
+                                            {% endfor %}
+                                            <th>Output</th>
+                                            {% for name in entries.arguments %}
+                                                <th>d({{ name }})</th>
                                             {% endfor %}
                                         </tr>
-                                    {% endfor %}
-                                        <tr>
-                                            <th>Average</th>
-                                            {% for name in entries.arguments %}
+                                    </thead>
+                                    <tbody>
+                                        {% for point in entries.function %}
+                                            <tr>
+                                                <th>{{ loop.index }}</th>
+
+                                                {% for p in point[0] %}
+                                                    <td>{{ p }}</td>
+                                                {% endfor %}
+
+                                                <td><input type="text" name="v{{ loop.index0 }}" value={{ point[1]}}></td>
+
+                                                {% set tmp_counter = loop.index0 %}
+                                                {% set function_size = loop.length + 1 %}
+                                                {% for name in entries.arguments %}
+                                                    <td>{{ entries.derivatives[tmp_counter + loop.index0*function_size] }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                            <tr>
+                                                <th>Average</th>
+                                                {% for name in entries.arguments %}
+                                                    <td></td>
+                                                {% endfor %}
                                                 <td></td>
-                                            {% endfor %}
-                                            <td></td>
-                                            {% for name in entries.arguments %}
-                                                <td>{{ entries.derivatives[loop.index0*((entries.function|length) + 1) + (entries.function|length)] }}</td>
-                                            {% endfor %}
-                                        </tr>
-                                </tbody>
-                            </table>
+                                                {% for name in entries.arguments %}
+                                                    <td>{{ entries.derivatives[loop.index0*((entries.function|length) + 1) + (entries.function|length)] }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10"></div>
-                        <div class="col-md-2">
-                            <input type="hidden" name="multiplicity" value="{{ entries.multiplicities}}" />
-                            <input type="hidden" name="names" value="{{ entries.names }}" />
-                            <input type=submit value=Submit>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="multiplicity" value="{{ entries.multiplicities}}" />
+                                <input type="hidden" name="names" value="{{ entries.names }}" />
+                                <input class="center-block" type=submit value=Submit>
+                            </div>
                         </div>
-                </form>
+                    </form>
+                </div>
                 {% if entries.image %}
                     <div class="page-header">
                         <h1>Function Image</h1>
