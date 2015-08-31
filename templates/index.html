@@ -5,13 +5,20 @@
                 <h1>Input Function</h1>
             </div>
             <div class="row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-8">
-                    <form action="{{ url_for('derivatives') }}" method=post>
-                        <textarea class="col-xs-12" name=function rows=5></textarea>
-                        <input type=submit value=Submit>
-                    </form>
-                </div>
+                <form action="{{ url_for('derivatives') }}" method=post>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                                <textarea class="col-md-12" name=function rows=5></textarea>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input class="center-block"type=submit value=Submit>
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <div class="page-header">
@@ -21,7 +28,7 @@
                 {% if loop.index0 % 3 == 0 %}
                     <div class="row">
                 {% endif %}
-                        <div class="col-sm-4">
+                        <div class="col-md-4">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">{{ loop.index }}. {{ example[0] }}</h3>

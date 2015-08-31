@@ -16,20 +16,24 @@
             <div class="page-header">
                 <h1>About</h1>
             </div>
-            <div class="well">
-                {% for line in entries.about.split("\n") %}
-                    <p>{{ line|safe }}</p>
-                {% endfor %}
+            <div class="row">
+                <div class="well">
+                    {% for line in entries.about.split("\n") %}
+                        <p>{{ line|safe }}</p>
+                    {% endfor %}
+                </div>
             </div>
             <div class="page-header">
                 <h1>License</h1>
             </div>
-            <div class="well">
-                {% for par in entries.license.split("\n\n") %}
-                    <p>
-                        {{ par|safe }} 
-                    </p>
-                {% endfor %}
+            <div class="row">
+                <div class="well">
+                    {% for par in entries.license.split("\n\n") %}
+                        <p>
+                            {{ par|safe }} 
+                        </p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </body>
