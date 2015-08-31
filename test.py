@@ -4,6 +4,7 @@ import os
 import string
 import content
 import server
+import re
 
 class TestDexi(unittest.TestCase):
 
@@ -92,7 +93,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, anim, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
         self.assertEqual(derivatives, ["1.00"] * 4);
         self.assertEqual(evals, [(["1"], "1.00"), (["2"], "2.00"), (["3"], "3.00")])
 
@@ -100,8 +101,6 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(image[-4:], ".png")
         for c in image[:-4]:
             self.assertTrue(c in self._POSSIBLE_CHARS)
-
-        self.assertEqual(anim, "")
 
         self.assertEqual(success, True)
         self.assertEqual(message, "")
@@ -116,7 +115,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, anim, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
         self.assertEqual(derivatives, ["1.00"] * 20);
         self.assertEqual(evals, [(["1", "1"], "2.00"), (["2", "2"], "4.00"), (["3", "3.5"], "6.50")])
 
@@ -125,11 +124,6 @@ class TestDexi(unittest.TestCase):
         for c in image[:-4]:
             self.assertTrue(c in self._POSSIBLE_CHARS)
         
-        self.assertNotEqual(anim, "")
-        self.assertEqual(anim[-4:], ".gif")
-        for c in anim[:-4]:
-            self.assertTrue(c in self._POSSIBLE_CHARS)
-
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
@@ -147,7 +141,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, anim, success, message = dexi.get_derivatives(function, evaluations, arguments)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments)
         self.assertEqual(derivatives, ["-1.00", "0.00", "-2.00", "1.00", "-2.00", "1.00", "1.00", "-1.00", "-2.00",
                                        "-2.00", "-0.50", "-0.00", "-0.50", "-0.00", "2.00", "1.50", "-0.00", "-1.50",
                                        "-3.00", "-1.00", "2.00", "-2.00", "2.00", "3.00", "2.00", "1.00", "-1.00",
@@ -160,7 +154,6 @@ class TestDexi(unittest.TestCase):
                                        "-1.50", "-1.00", "0.11"])
         self.assertEqual(evals, [(["1", "2", "3"], "3.00"), (["0.1", "0.2", "0.3"], "2.93")])
         self.assertEqual(image, "")
-        self.assertEqual(anim, "")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
@@ -178,7 +171,7 @@ class TestDexi(unittest.TestCase):
         self.assertEqual(success, True)
         self.assertEqual(message, "")
 
-        derivatives, evals, image, anim, success, message = dexi.get_derivatives(function, evaluations, arguments)
+        derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments)
         self.assertEqual(derivatives, ["-1.00", "0.00", "-2.00", "1.00", "-2.00", "1.00", "1.00", "-1.00", "-2.00",
                                        "-2.00", "-0.50", "-0.00", "-0.50", "-0.00", "2.00", "1.50", "-0.00", "-1.50",
                                        "-3.00", "-1.00", "2.00", "-2.00", "2.00", "3.00", "2.00", "1.00", "-1.00",
@@ -191,9 +184,26 @@ class TestDexi(unittest.TestCase):
                                        "-1.50", "-1.00", "0.11"])
         self.assertEqual(evals, [(["1", "2", "3"], "3.00"), (["0.1", "0.2", "0.3"], "2.93")])
         self.assertEqual(image, "")
-        self.assertEqual(anim, "")
         self.assertEqual(success, True)
         self.assertEqual(message, "")
+
+    def test_animation(self):
+        anim_file_name = dexi._create_animation("", [])
+        self.assertEqual(anim_file_name, "")
+
+        anim_file_name = dexi._create_animation("", ["f"])
+        self.assertEqual(anim_file_name, "")
+
+        anim_file_name = dexi._create_animation("", ["f", "s", "t"])
+        self.assertEqual(anim_file_name, "")
+
+        content._DEFAULT_IMAGE_PATH = ""
+        function = [[(0, 0), 0], [(0, 1), 1], [(1, 0), 1], [(1, 1), 2]]
+        anim_file_name = dexi._create_animation(function, ["f", "s"])
+
+        self.assertRegexpMatches(anim_file_name, "[a-zA-Z0-9]{10}\.gif")
+        self.assertTrue(os.path.isfile(anim_file_name))
+        os.remove(anim_file_name)
 
     def test_error_2argument(self):
         # test if construction of a two argument function produces the expected errors
@@ -235,13 +245,6 @@ class TestDexi(unittest.TestCase):
 
         self.assertRaises(ValueError, dexi._format_number, "foo")
 
-    def test_content(self):
-        self.assertIn("DEVELOPMENT", content._TITLE)
-        self.assertIn("DEX", content._TITLE)
-        self.assertIn("General Public License", content._GPL)
-        self.assertNotEqual(content._ABOUT, "")
-        self.assertNotEqual(content._SUBTITLE, "")
-
     def test_content_examples(self):
         for description, example in content._EXAMPLES:
             inp_line = example.replace(" ", "\n")
@@ -267,7 +270,7 @@ class TestDexi(unittest.TestCase):
             self.assertEqual(success, True)
             self.assertEqual(message, "")
 
-            derivatives, evals, image, anim, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
+            derivatives, evals, image, success, message = dexi.get_derivatives(function, evaluations, arguments, False)
 
             self.assertEqual(len(derivatives), (len(function) + 1)*len(arguments))
 
@@ -287,11 +290,8 @@ class TestDexi(unittest.TestCase):
 
             if len(arguments) < 3:
                 self.assertRegexpMatches(image, "[a-zA-Z0-9]{10}\.png")
-                if len(arguments) == 2:
-                    self.assertRegexpMatches(anim, "[a-zA-Z0-9]{10}\.gif")
             else:
                 self.assertEqual(image, "")
-                self.assertEqual(anim, "")
 
             self.assertEqual(success, True)
             self.assertEqual(message, "")
@@ -306,6 +306,13 @@ class ServerTest(unittest.TestCase):
         server.app.config["TESTING"] = True
         server.app.config["DEBUG"] = True
         content._DEFAULT_IMAGE_PATH = ""
+
+    def test_content(self):
+        self.assertIn("DEVELOPMENT", content._TITLE)
+        self.assertIn("DEX", content._TITLE)
+        self.assertIn("General Public License", content._GPL)
+        self.assertNotEqual(content._ABOUT, "")
+        self.assertNotEqual(content._SUBTITLE, "")
 
     def test_root(self):
         result = self.app.get("/")
@@ -341,6 +348,9 @@ class ServerTest(unittest.TestCase):
 
     def test_not_allowed(self):
         result = self.app.get("/get_derivatives")
+        self.assertEqual(result.status, "405 METHOD NOT ALLOWED")
+
+        result = self.app.get("/get_animation")
         self.assertEqual(result.status, "405 METHOD NOT ALLOWED")
 
     def test_incorrect_input(self):
@@ -420,7 +430,13 @@ class ServerTest(unittest.TestCase):
 
         self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
         self.assertIn("<h1>Function Image</h1>", data)
+        self.assertNotIn("<h1>Function Animation</h1>", data)
         self.assertIn("<th>Average</th>", data)
+
+        m = re.search("[A-Za-z0-9]{10}\.png", data)
+        png_file = m.group(0)
+        self.assertTrue(os.path.isfile(png_file))
+        os.remove(png_file)
 
     def test_derivatives_small_dynamic(self):
         query = {"names": "f,s",
@@ -449,7 +465,46 @@ class ServerTest(unittest.TestCase):
 
         self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
         self.assertIn("<h1>Function Image</h1>", data)
+        self.assertIn("<h1>Function Animation</h1>", data)
         self.assertIn("<th>Average</th>", data)
+
+        m = re.search("[A-Za-z0-9]{10}\.png", data)
+        png_file = m.group(0)
+        self.assertTrue(os.path.isfile(png_file))
+        os.remove(png_file)
+
+    def test_animation(self):
+        query = {"names": "f,s",
+                 "multiplicity": "2,2",
+                 "v0": 0,
+                 "v1": 1,
+                 "v2": 2,
+                 "v3": 3}
+        
+        result = self.app.post("/get_animation", data=query)
+        data = result.data
+
+        self.assertEqual(result.status, "200 OK")
+        self.assertRegexpMatches(data, "[A-Za-z0-9]{10}\.gif")
+        self.assertTrue(os.path.isfile(data))
+        os.remove(data)
+
+    def test_animation_error(self):
+        query = {}
+        result = self.app.post("/get_animation", data=query)
+        self.assertEqual(result.status, "200 OK")
+        data = result.data
+        self.assertEqual(data, "Cannot create function animation. Missing arguments in request.")
+
+        query = {"names": "f,s",
+                 "multiplicity": "2,2",
+                 "v0": 0,
+                 "v1": 1,
+                 "v2": 2}
+        result = self.app.post("/get_animation", data=query)
+        self.assertEqual(result.status, "200 OK")
+        data = result.data
+        self.assertEqual(data, "Could not parse function! The input space size (4) does not match output space size (3)!")
 
     def test_derivatives_content_examples(self):
         for _, example in content._EXAMPLES:
@@ -458,6 +513,7 @@ class ServerTest(unittest.TestCase):
 
             result = self.app.post("/get_derivatives", data=query)
             data = result.data
+            self.assertEqual(result.status, "200 OK")
 
             for line in content._TITLE.split("\n"):
                 self.assertIn(line, data)
@@ -474,6 +530,19 @@ class ServerTest(unittest.TestCase):
             self.assertIn("<h1>Tabelaric Function and Derivatives</h1>", data)
             if len(function.split("\n")[1].split(",")) < 3:
                 self.assertIn("<h1>Function Image</h1>", data)
+                m = re.search("[A-Za-z0-9]{10}\.png", data)
+                png_file = m.group(0)
+                self.assertTrue(os.path.isfile(png_file))
+                os.remove(png_file)
+
+                if len(function.split("\n")[1].split(",")) == 2:
+                    self.assertIn("<h1>Function Animation</h1>", data)
+                else:
+                    self.assertNotIn("<h1>Function Animation</h1>", data)
+            else:
+                self.assertNotIn("<h1>Function Image</h1>", data)
+                self.assertNotIn("<h1>Function Animation</h1>", data)
+
             self.assertIn("<th>Average</th>", data)
 
             if len(function.split("\n")) > 3:
